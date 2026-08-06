@@ -1,5 +1,9 @@
 # Immediate UI Mode Showcase & Use-Case Suite
 
+[![Live Demo on GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2ea44f?style=for-the-badge&logo=github)](https://tsunoyu.github.io/immediate-ui-mode-demo/)
+
+🌐 **Live Demo**: [https://tsunoyu.github.io/immediate-ui-mode-demo/](https://tsunoyu.github.io/immediate-ui-mode-demo/)
+
 A zero-dependency interactive demonstration suite for **Chrome WebAuthn / FedCM Immediate UI Mode** (`uiMode: 'immediate'`). Designed to increase developer awareness, illustrate best-practice integration patterns from Chrome Identity guidelines, and introduce newly discovered high-converting use cases.
 
 ---
