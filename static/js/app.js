@@ -174,7 +174,7 @@ function renderDemoPagination(cleanPath) {
  * Creates a real discoverable resident passkey using navigator.credentials.create
  * Supports static GitHub Pages & dynamic backends
  */
-export async function createTestPasskey({ username = 'Elisa Beckett', email = 'elisa.beckett@gmail.com' } = {}) {
+export async function createTestPasskey({ username = 'Elisa Beckett', email = 'elisa.beckett@demogmail.com' } = {}) {
   try {
     if (!window.PublicKeyCredential || !navigator.credentials?.create) {
       throw new Error('WebAuthn API is not supported in this browser.');
@@ -376,7 +376,7 @@ export async function runImmediateAuth(options) {
 
       const immUser = {
         username: usernameToStore,
-        email: 'elisa.beckett@gmail.com',
+        email: 'elisa.beckett@demogmail.com',
         credentialType: cred.type === 'password' ? 'password' : 'passkey',
         provider: cred.type === 'password' ? 'Password Manager' : 'Google Password Manager',
       };

@@ -81,7 +81,7 @@ const server = http.createServer((req, res) => {
         status: 'ok',
         user: {
           username: 'Elisa Beckett',
-          email: 'elisa.beckett@gmail.com',
+          email: 'elisa.beckett@demogmail.com',
           credentialType: 'passkey',
           provider: 'Google Password Manager',
         },
@@ -101,7 +101,7 @@ const server = http.createServer((req, res) => {
         },
         user: {
           id: 'dXNlci1pZC0xMjM0NQ==',
-          name: 'elisa.beckett@gmail.com',
+          name: 'elisa.beckett@demogmail.com',
           displayName: 'Elisa Beckett',
         },
       })

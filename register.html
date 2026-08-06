@@ -38,7 +38,7 @@
           <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.2rem; font-weight: 800;">✨ Register Test Passkey</h3>
           <div style="margin-bottom: 14px;">
             <label style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px;">Email address</label>
-            <input id="reg-email" type="email" value="elisa.beckett@gmail.com" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.95rem;">
+            <input id="reg-email" type="email" value="elisa.beckett@demogmail.com" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.95rem;">
           </div>
           <div style="margin-bottom: 20px;">
             <label style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px;">Display name</label>
@@ -91,8 +91,8 @@ const credential = await navigator.credentials.create({
     challenge: serverChallenge,
     rp: { name: "Immediate UI Mode Demo Site", id: "localhost" },
     user: {
-      id: new TextEncoder().encode("elisa.beckett@gmail.com"),
-      name: "elisa.beckett@gmail.com",
+      id: new TextEncoder().encode("elisa.beckett@demogmail.com"),
+      name: "elisa.beckett@demogmail.com",
       displayName: "Elisa Beckett"
     },
     pubKeyCredParams: [{ type: "public-key", alg: -7 }],
@@ -116,7 +116,7 @@ const credential = await navigator.credentials.create({
       createBtn.addEventListener('click', async () => {
         const emailInput = document.getElementById('reg-email');
         const nameInput = document.getElementById('reg-name');
-        const email = emailInput?.value || 'elisa.beckett@gmail.com';
+        const email = emailInput?.value || 'elisa.beckett@demogmail.com';
         const username = nameInput?.value || 'Elisa Beckett';
 
         createBtn.textContent = '🔄 Creating passkey with browser API...';

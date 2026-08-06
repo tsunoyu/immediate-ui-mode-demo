@@ -256,7 +256,7 @@ try {
       regBtn.addEventListener('click', async () => {
         regBtn.textContent = '🔄 Registering in authenticator...';
         regBtn.disabled = true;
-        const res = await createTestPasskey({ username: 'Elisa Beckett', email: 'elisa.beckett@gmail.com' });
+        const res = await createTestPasskey({ username: 'Elisa Beckett', email: 'elisa.beckett@demogmail.com' });
         regBtn.textContent = '🔑 Step 1: Register Passkey in Browser/Virtual Authenticator';
         regBtn.disabled = false;
         if (statusLog) {
@@ -266,7 +266,7 @@ try {
           statusLog.innerHTML = `
             <div>🎉 <strong>Step 1 Complete: Resident Passkey Registered!</strong></div>
             <div style="font-size:0.9rem; margin-top:6px; font-weight:normal;">
-              Registered credential for: <strong>Elisa Beckett</strong> (<code>elisa.beckett@gmail.com</code>)<br>
+              Registered credential for: <strong>Elisa Beckett</strong> (<code>elisa.beckett@demogmail.com</code>)<br>
               Now click <strong>⚡ Step 2: Test Immediate UI Mode Here</strong> below to see Immediate UI mode succeed instantly!
             </div>
           `;
