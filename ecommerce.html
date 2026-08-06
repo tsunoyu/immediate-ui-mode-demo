@@ -291,21 +291,22 @@
                 </p>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                  <!-- Option 1: Sign in with account / passkey -->
+                  <!-- Option 1: Register Passkey (Primary for users with no local passkey) -->
                   <div id="imm-modal-account-card" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 22px; background: var(--surface-subtle); display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
-                      <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800;">Existing Account / Passkey</h4>
-                      <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 16px 0;">
-                        Already created a passkey on this phone or another device? Sign in instantly:
+                      <span class="imm-product-badge" style="background: #111; color: #fff; margin-bottom: 8px; display: inline-block;">Fastest Checkout</span>
+                      <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800;">✨ Register a Passkey</h4>
+                      <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 16px 0; line-height: 1.5;">
+                        Create a passkey in 5 seconds to unlock instant 1-tap checkout for this and all future orders.
                       </p>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                      <button id="imm-modal-passkey-login-btn" class="btn btn-primary btn-full" style="font-weight: 700;">
-                        🔑 Sign In with Passkey
-                      </button>
-                      <a href="register.html" class="btn btn-outline btn-full" style="font-size: 0.84rem; text-align: center;">
-                        ✨ Create / Register New Passkey
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                      <a href="register.html" class="btn btn-primary btn-full" style="text-align: center; font-weight: 700;">
+                        ✨ Create Passkey Now (register.html)
                       </a>
+                      <button id="imm-modal-cross-device-btn" class="btn btn-outline btn-full" style="font-size: 0.82rem; padding: 8px 12px;">
+                        📱 Have passkey on another phone? (Scan QR)
+                      </button>
                     </div>
                     <div id="imm-modal-passkey-feedback" style="display: none; margin-top: 14px; background: #fff9e6; border: 1px solid #ffd54f; border-radius: 8px; padding: 12px; font-size: 0.84rem; color: #5d4037; line-height: 1.5;"></div>
                   </div>
@@ -343,13 +344,13 @@
               if (e.target === modalBackdrop) modalBackdrop.remove();
             });
 
-            // Working Passkey Login inside Modal
-            const passkeyLoginBtn = document.getElementById('imm-modal-passkey-login-btn');
+            // Cross-device / QR Code passkey authentication
+            const crossDeviceBtn = document.getElementById('imm-modal-cross-device-btn');
             const feedbackEl = document.getElementById('imm-modal-passkey-feedback');
 
-            passkeyLoginBtn?.addEventListener('click', async () => {
-              passkeyLoginBtn.textContent = '🔄 Checking authenticator...';
-              passkeyLoginBtn.disabled = true;
+            crossDeviceBtn?.addEventListener('click', async () => {
+              crossDeviceBtn.textContent = '🔄 Prompting QR code / phone...';
+              crossDeviceBtn.disabled = true;
               if (feedbackEl) feedbackEl.style.display = 'none';
 
               try {
@@ -397,22 +398,22 @@
                   toast(`🎉 Welcome back, ${signedInUser.username}! Order confirmed.`);
                 }
               } catch (err) {
-                passkeyLoginBtn.textContent = '🔑 Sign In with Passkey';
-                passkeyLoginBtn.disabled = false;
+                crossDeviceBtn.textContent = '📱 Have passkey on another phone? (Scan QR)';
+                crossDeviceBtn.disabled = false;
 
                 if (feedbackEl) {
                   feedbackEl.style.display = 'block';
                   feedbackEl.innerHTML = `
-                    <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey Found</div>
-                    <div>No passkey was found on this device. If this is your first time, please create one first:</div>
+                    <div style="font-weight: 700; margin-bottom: 4px;">⚠️ Passkey scan cancelled or not found</div>
+                    <div>If you don't have a passkey yet, register one below in just 5 seconds:</div>
                     <div style="margin-top: 10px;">
                       <a href="register.html" class="btn btn-primary btn-full" style="font-size: 0.82rem; padding: 7px 10px; text-align: center;">
-                        ✨ Register Passkey Now &rarr;
+                        ✨ Create Passkey Now &rarr;
                       </a>
                     </div>
                   `;
                 }
-                toast('No passkey detected on this device.');
+                toast('Cross-device passkey query ended.');
               }
             });
 
