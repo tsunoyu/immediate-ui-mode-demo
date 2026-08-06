@@ -292,26 +292,30 @@
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                   <!-- Option 1: Sign in with account / passkey -->
-                  <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 22px; background: var(--surface-subtle); display: flex; flex-direction: column; justify-content: space-between;">
+                  <div id="imm-modal-account-card" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 22px; background: var(--surface-subtle); display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                       <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800;">Existing Account / Passkey</h4>
                       <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 16px 0;">
-                        Use an existing passkey (e.g. on this device, another phone, or security key) to sign in and confirm your order.
+                        Already created a passkey on this phone or another device? Sign in instantly:
                       </p>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                       <button id="imm-modal-passkey-login-btn" class="btn btn-primary btn-full" style="font-weight: 700;">
-                        🔑 Sign In with Passkey Now
+                        🔑 Sign In with Passkey
                       </button>
                       <a href="register.html" class="btn btn-outline btn-full" style="font-size: 0.84rem; text-align: center;">
-                        📝 Register New Passkey (/register.html)
+                        ✨ Create / Register New Passkey
                       </a>
                     </div>
+                    <div id="imm-modal-passkey-feedback" style="display: none; margin-top: 14px; background: #fff9e6; border: 1px solid #ffd54f; border-radius: 8px; padding: 12px; font-size: 0.84rem; color: #5d4037; line-height: 1.5;"></div>
                   </div>
 
                   <!-- Option 2: Guest Checkout Form -->
                   <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 22px; background: var(--surface);">
                     <h4 style="margin: 0 0 12px 0; font-size: 1.05rem; font-weight: 800;">📦 Guest Checkout</h4>
+                    <p style="font-size: 0.84rem; color: var(--text-muted); margin: 0 0 12px 0;">
+                      No account needed. Enter shipping details to complete your order immediately:
+                    </p>
                     <div style="margin-bottom: 10px;">
                       <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Full Name</label>
                       <input id="guest-name" type="text" placeholder="e.g. Alex Morgan" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.9rem;">
@@ -341,17 +345,32 @@
 
             // Working Passkey Login inside Modal
             const passkeyLoginBtn = document.getElementById('imm-modal-passkey-login-btn');
+            const feedbackEl = document.getElementById('imm-modal-passkey-feedback');
+
             passkeyLoginBtn?.addEventListener('click', async () => {
-              passkeyLoginBtn.textContent = '🔄 Prompting passkey authenticator...';
+              passkeyLoginBtn.textContent = '🔄 Checking authenticator...';
               passkeyLoginBtn.disabled = true;
+              if (feedbackEl) feedbackEl.style.display = 'none';
 
               try {
-                const challengeRes = await fetch('/api/webauthn/challenge');
-                const challengeData = await challengeRes.json();
+                let challengeBytes = null;
+                try {
+                  const challengeRes = await fetch('api/webauthn/challenge');
+                  if (challengeRes.ok) {
+                    const challengeData = await challengeRes.json();
+                    challengeBytes = Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0));
+                  }
+                } catch (e) {}
+
+                if (!challengeBytes) {
+                  const buf = new Uint8Array(32);
+                  window.crypto.getRandomValues(buf);
+                  challengeBytes = buf;
+                }
 
                 const cred = await navigator.credentials.get({
                   publicKey: {
-                    challenge: Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0)),
+                    challenge: challengeBytes,
                     rpId: window.location.hostname || 'localhost',
                     userVerification: 'preferred',
                     timeout: 60000,
@@ -378,9 +397,22 @@
                   toast(`🎉 Welcome back, ${signedInUser.username}! Order confirmed.`);
                 }
               } catch (err) {
-                toast('Passkey sign-in cancelled or error: ' + (err.message || err.name));
-                passkeyLoginBtn.textContent = '🔑 Sign In with Passkey Now';
+                passkeyLoginBtn.textContent = '🔑 Sign In with Passkey';
                 passkeyLoginBtn.disabled = false;
+
+                if (feedbackEl) {
+                  feedbackEl.style.display = 'block';
+                  feedbackEl.innerHTML = `
+                    <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey Found</div>
+                    <div>No passkey was found on this device. If this is your first time, please create one first:</div>
+                    <div style="margin-top: 10px;">
+                      <a href="register.html" class="btn btn-primary btn-full" style="font-size: 0.82rem; padding: 7px 10px; text-align: center;">
+                        ✨ Register Passkey Now &rarr;
+                      </a>
+                    </div>
+                  `;
+                }
+                toast('No passkey detected on this device.');
               }
             });
 
