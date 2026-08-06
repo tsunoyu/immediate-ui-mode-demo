@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-Commerce Checkout Demo | Immediate UI Mode Showcase</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
   <div class="container">
@@ -178,7 +178,7 @@
   </div>
 
   <script type="module">
-    import { initImmediateShowcase, runImmediateAuth, toast } from '/static/js/app.js';
+    import { initImmediateShowcase, runImmediateAuth, toast } from "./static/js/app.js";
 
     initImmediateShowcase('/ecommerce.html');
 
@@ -218,7 +218,7 @@
             // complete the intercepted navigation and redirect directly to the Sign-In / Sign-Up page!
             toast('No passkey on this device &rarr; Navigating to Sign-In page...');
             setTimeout(() => {
-              window.location.href = '/register.html';
+              window.location.href = "register.html";
             }, 300);
           },
         });
@@ -303,7 +303,7 @@
                       <button id="imm-modal-passkey-login-btn" class="btn btn-primary btn-full" style="font-weight: 700;">
                         🔑 Sign In with Passkey Now
                       </button>
-                      <a href="/register.html" class="btn btn-outline btn-full" style="font-size: 0.84rem; text-align: center;">
+                      <a href="register.html" class="btn btn-outline btn-full" style="font-size: 0.84rem; text-align: center;">
                         📝 Register New Passkey (/register.html)
                       </a>
                     </div>

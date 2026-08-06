@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Immediate UI Mode Showcase | Chrome Identity 2026</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
   <div class="container">
@@ -48,7 +48,7 @@
             <button id="imm-test-now-btn" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.95rem;">
               ⚡ Step 2: Test Immediate UI Mode Here
             </button>
-            <a href="/ecommerce.html" class="btn btn-outline" style="padding: 10px 18px;">
+            <a href="ecommerce.html" class="btn btn-outline" style="padding: 10px 18px;">
               🛍️ Explore E-Commerce Checkout Demo
             </a>
           </div>
@@ -117,7 +117,7 @@
             Allow returning users to sign in dynamically before checking out, without navigating away from the shopping cart. Guest shoppers fall back seamlessly to guest checkout.
           </p>
         </div>
-        <a href="/ecommerce.html" class="btn btn-outline btn-full">
+        <a href="ecommerce.html" class="btn btn-outline btn-full">
           Launch Storefront Demo &rarr;
         </a>
       </div>
@@ -132,7 +132,7 @@
             Users sign in on-the-fly after clicking "Like", "Bookmark", or "Wishlist", recording their action seamlessly without page navigation or lost context.
           </p>
         </div>
-        <a href="/actions.html" class="btn btn-outline btn-full">
+        <a href="actions.html" class="btn btn-outline btn-full">
           Launch Actions Demo &rarr;
         </a>
       </div>
@@ -147,7 +147,7 @@
             How to implement a dedicated "Sign in with a passkey" button combined with password/federated fallback forms for cross-browser progressive enhancement.
           </p>
         </div>
-        <a href="/passkey-button.html" class="btn btn-outline btn-full">
+        <a href="passkey-button.html" class="btn btn-outline btn-full">
           Launch Passkey Button Demo &rarr;
         </a>
       </div>
@@ -162,7 +162,7 @@
             Reauthenticate already signed-in users on-the-fly before sensitive actions like authorizing payments, changing shipping addresses, or generating API keys.
           </p>
         </div>
-        <a href="/reauth.html" class="btn btn-outline btn-full">
+        <a href="reauth.html" class="btn btn-outline btn-full">
           Launch Reauth Demo &rarr;
         </a>
       </div>
@@ -177,7 +177,7 @@
             Prevent lost draft text! Users type a comment on docs or articles, hit "Post", and Immediate UI mode signs them in inline before publishing the comment.
           </p>
         </div>
-        <a href="/community.html" class="btn btn-primary btn-full">
+        <a href="community.html" class="btn btn-primary btn-full">
           Launch Commenting Demo &rarr;
         </a>
       </div>
@@ -192,7 +192,7 @@
             Let developers unlock whitepapers, research reports, or premium downloads with a single click—authenticating on the spot without leaving the page.
           </p>
         </div>
-        <a href="/gated.html" class="btn btn-primary btn-full">
+        <a href="gated.html" class="btn btn-primary btn-full">
           Launch Gated Demo &rarr;
         </a>
       </div>
@@ -207,7 +207,7 @@
             In multi-account SaaS apps or developer dashboards, let users click "Switch Account" in the top bar to pick another account from the browser's native list.
           </p>
         </div>
-        <a href="/switcher.html" class="btn btn-primary btn-full">
+        <a href="switcher.html" class="btn btn-primary btn-full">
           Launch Account Switcher &rarr;
         </a>
       </div>
@@ -244,7 +244,7 @@ try {
   </div>
 
   <script type="module">
-    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, createTestPasskey, toast } from '/static/js/app.js';
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, createTestPasskey, toast } from "./static/js/app.js";
 
     initImmediateShowcase('/');
 

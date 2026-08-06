@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Discoverable Passkey | Immediate UI Mode Showcase</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
   <div class="container">
@@ -71,13 +71,13 @@
           Once your passkey is created above, explore any of the real-world Immediate UI mode use cases:
         </p>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="/ecommerce.html" class="btn btn-outline" style="font-size: 0.88rem;">🛍️ E-Commerce Checkout</a>
-          <a href="/actions.html" class="btn btn-outline" style="font-size: 0.88rem;">❤️ Action Buttons</a>
-          <a href="/passkey-button.html" class="btn btn-outline" style="font-size: 0.88rem;">🔑 Passkey Button</a>
-          <a href="/reauth.html" class="btn btn-outline" style="font-size: 0.88rem;">🔒 Step-Up Reauth</a>
-          <a href="/community.html" class="btn btn-outline" style="font-size: 0.88rem;">💬 Inline Commenting</a>
-          <a href="/gated.html" class="btn btn-outline" style="font-size: 0.88rem;">📄 Gated Downloads</a>
-          <a href="/switcher.html" class="btn btn-outline" style="font-size: 0.88rem;">🔄 Account Switcher</a>
+          <a href="ecommerce.html" class="btn btn-outline" style="font-size: 0.88rem;">🛍️ E-Commerce Checkout</a>
+          <a href="actions.html" class="btn btn-outline" style="font-size: 0.88rem;">❤️ Action Buttons</a>
+          <a href="passkey-button.html" class="btn btn-outline" style="font-size: 0.88rem;">🔑 Passkey Button</a>
+          <a href="reauth.html" class="btn btn-outline" style="font-size: 0.88rem;">🔒 Step-Up Reauth</a>
+          <a href="community.html" class="btn btn-outline" style="font-size: 0.88rem;">💬 Inline Commenting</a>
+          <a href="gated.html" class="btn btn-outline" style="font-size: 0.88rem;">📄 Gated Downloads</a>
+          <a href="switcher.html" class="btn btn-outline" style="font-size: 0.88rem;">🔄 Account Switcher</a>
         </div>
       </div>
     </section>
@@ -106,7 +106,7 @@ const credential = await navigator.credentials.create({
   </div>
 
   <script type="module">
-    import { initImmediateShowcase, createTestPasskey, toast } from '/static/js/app.js';
+    import { initImmediateShowcase, createTestPasskey, toast } from "./static/js/app.js";
 
     initImmediateShowcase('/register.html');
 

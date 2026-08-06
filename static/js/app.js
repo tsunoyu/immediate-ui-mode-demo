@@ -8,31 +8,31 @@ const NAV_GROUPS = [
   {
     title: 'Home',
     items: [
-      { href: '/', label: '🏠 Hub & Overview' },
-      { href: '/register.html', label: '🔑 Passkey Manager' },
+      { href: 'index.html', label: '🏠 Hub & Overview' },
+      { href: 'register.html', label: '🔑 Passkey Manager' },
     ],
   },
   {
     title: 'Recommended Do-s (Chrome Identity)',
     items: [
-      { href: '/ecommerce.html', label: '🛍️ E-Commerce' },
-      { href: '/actions.html', label: '❤️ Action Buttons' },
-      { href: '/passkey-button.html', label: '🔑 Passkey Button' },
-      { href: '/reauth.html', label: '🔒 Reauth' },
+      { href: 'ecommerce.html', label: '🛍️ E-Commerce' },
+      { href: 'actions.html', label: '❤️ Action Buttons' },
+      { href: 'passkey-button.html', label: '🔑 Passkey Button' },
+      { href: 'reauth.html', label: '🔒 Reauth' },
     ],
   },
   {
     title: 'New Use Cases',
     items: [
-      { href: '/community.html', label: '💬 Commenting' },
-      { href: '/gated.html', label: '📄 Gated Content' },
-      { href: '/switcher.html', label: '🔄 Account Switcher' },
+      { href: 'community.html', label: '💬 Commenting' },
+      { href: 'gated.html', label: '📄 Gated Content' },
+      { href: 'switcher.html', label: '🔄 Account Switcher' },
     ],
   },
 ];
 
 /**
- * Detects the Chrome version from User-Agent string (matching deephand repo pattern)
+ * Detects the Chrome version from User-Agent string
  */
 export function getChromeVersion() {
   const raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
@@ -54,9 +54,17 @@ export function toast(message, duration = 3500) {
   }, duration);
 }
 
+function generateClientChallenge() {
+  const buffer = new Uint8Array(32);
+  window.crypto.getRandomValues(buffer);
+  return buffer;
+}
+
 export async function initImmediateShowcase(currentPath) {
-  renderShowcaseHeader(currentPath);
-  renderDemoPagination(currentPath);
+  // Normalize currentPath to filename
+  const cleanPath = currentPath.split('/').pop() || 'index.html';
+  renderShowcaseHeader(cleanPath);
+  renderDemoPagination(cleanPath);
 
   let isSupported = false;
   try {
@@ -89,7 +97,7 @@ function updateHeaderUI(isSupported) {
   }
 }
 
-function renderShowcaseHeader(currentPath) {
+function renderShowcaseHeader(cleanPath) {
   const navContainer = document.getElementById('imm-showcase-navbar');
   if (!navContainer) return;
 
@@ -97,11 +105,11 @@ function renderShowcaseHeader(currentPath) {
     <div class="imm-showcase-header" style="position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.06); background: #ffffff;">
       <div class="imm-header-top">
         <div class="imm-title-group">
-          <a href="/" style="text-decoration:none;"><h1 style="color:var(--primary); font-size:1.45rem; margin:0;">⚡ Immediate UI Mode Showcase</h1></a>
+          <a href="index.html" style="text-decoration:none;"><h1 style="color:var(--primary); font-size:1.45rem; margin:0;">⚡ Immediate UI Mode Showcase</h1></a>
           <span id="imm-status-badge" class="imm-badge supported">Live WebAuthn Mode</span>
         </div>
         <div class="imm-controls">
-          <a href="/register.html" class="btn btn-primary" style="padding:7px 18px; font-size:0.85rem;">
+          <a href="register.html" class="btn btn-primary" style="padding:7px 18px; font-size:0.85rem;">
             🔑 Passkey Manager
           </a>
         </div>
@@ -116,10 +124,7 @@ function renderShowcaseHeader(currentPath) {
         <nav class="imm-nav-pills" style="display:flex; flex-wrap:wrap; gap:8px;">
     `;
     for (const item of group.items) {
-      const isActive =
-        currentPath === item.href ||
-        (currentPath === '/index.html' && item.href === '/') ||
-        (currentPath === '' && item.href === '/');
+      const isActive = cleanPath === item.href || (cleanPath === '' && item.href === 'index.html');
       html += `<a href="${item.href}" class="imm-nav-pill ${isActive ? 'active' : ''}">${item.label}</a>`;
     }
     html += `
@@ -136,12 +141,10 @@ function renderShowcaseHeader(currentPath) {
   navContainer.innerHTML = html;
 }
 
-function renderDemoPagination(currentPath) {
+function renderDemoPagination(cleanPath) {
   const allItems = NAV_GROUPS.flatMap(g => g.items);
   const idx = allItems.findIndex(i =>
-    currentPath === i.href ||
-    (currentPath === '/index.html' && item.href === '/') ||
-    (currentPath === '' && item.href === '/')
+    cleanPath === i.href || (cleanPath === '' && i.href === 'index.html')
   );
   if (idx === -1) return;
 
@@ -169,7 +172,7 @@ function renderDemoPagination(currentPath) {
 
 /**
  * Creates a real discoverable resident passkey using navigator.credentials.create
- * Matching official WebAuthn Level 3 specification
+ * Supports static GitHub Pages & dynamic backends
  */
 export async function createTestPasskey({ username = 'Elisa Beckett', email = 'elisa.beckett@gmail.com' } = {}) {
   try {
@@ -177,16 +180,26 @@ export async function createTestPasskey({ username = 'Elisa Beckett', email = 'e
       throw new Error('WebAuthn API is not supported in this browser.');
     }
 
-    const res = await fetch('/api/webauthn/register-challenge');
-    const data = await res.json();
+    let challengeBytes = null;
+    try {
+      const res = await fetch('api/webauthn/register-challenge');
+      if (res.ok) {
+        const data = await res.json();
+        challengeBytes = Uint8Array.from(atob(data.challenge), c => c.charCodeAt(0));
+      }
+    } catch (e) {}
+
+    if (!challengeBytes) {
+      challengeBytes = generateClientChallenge();
+    }
 
     const userIdBuffer = new TextEncoder().encode(email);
 
     const createOptions = {
       publicKey: {
-        challenge: Uint8Array.from(atob(data.challenge), c => c.charCodeAt(0)),
+        challenge: challengeBytes,
         rp: {
-          name: data.rp.name || 'Immediate UI Mode Demo',
+          name: 'Immediate UI Mode Demo',
           id: window.location.hostname || 'localhost',
         },
         user: {
@@ -211,12 +224,13 @@ export async function createTestPasskey({ username = 'Elisa Beckett', email = 'e
       throw new Error('No credential was returned from authenticator.');
     }
 
-    const verifyRes = await fetch('/api/webauthn/register-verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: cred.id }),
-    });
-    const verifyData = await verifyRes.json();
+    try {
+      await fetch('api/webauthn/register-verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cred.id }),
+      });
+    } catch (e) {}
 
     toast(`🎉 Passkey registered successfully for ${email}!`);
     return { success: true, email, username, id: cred.id };
@@ -250,8 +264,8 @@ export function renderNotAllowedFallback({ containerId, scenarioName, error, onR
         </p>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px;">
-        <a href="/register.html" class="btn btn-primary" style="font-size:0.85rem; white-space:nowrap; text-align:center;">
-          🚀 Go to Sign-In &amp; Sign-Up Page (/register.html)
+        <a href="register.html" class="btn btn-primary" style="font-size:0.85rem; white-space:nowrap; text-align:center;">
+          🚀 Go to Sign-In &amp; Sign-Up Page (register.html)
         </a>
         <button id="imm-standard-modal-btn" class="btn btn-outline" style="font-size:0.85rem; white-space:nowrap;">
           🌐 Open Standard Passkey Modal
@@ -265,11 +279,22 @@ export function renderNotAllowedFallback({ containerId, scenarioName, error, onR
     standardModalBtn.textContent = '🔄 Opening browser modal...';
     standardModalBtn.disabled = true;
     try {
-      const challengeRes = await fetch('/api/webauthn/challenge');
-      const challengeData = await challengeRes.json();
+      let challengeBytes = null;
+      try {
+        const challengeRes = await fetch('api/webauthn/challenge');
+        if (challengeRes.ok) {
+          const challengeData = await challengeRes.json();
+          challengeBytes = Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0));
+        }
+      } catch (e) {}
+
+      if (!challengeBytes) {
+        challengeBytes = generateClientChallenge();
+      }
+
       const cred = await navigator.credentials.get({
         publicKey: {
-          challenge: Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0)),
+          challenge: challengeBytes,
           rpId: window.location.hostname || 'localhost',
           userVerification: 'preferred',
           timeout: 60000,
@@ -289,15 +314,26 @@ export function renderNotAllowedFallback({ containerId, scenarioName, error, onR
 
 /**
  * Runs Immediate UI Mode authentication in pure Live WebAuthn Mode
+ * Supports both GitHub Pages static hosting & dynamic servers
  */
 export async function runImmediateAuth(options) {
   try {
-    const challengeRes = await fetch('/api/webauthn/challenge');
-    const challengeData = await challengeRes.json();
+    let challengeBytes = null;
+    try {
+      const challengeRes = await fetch('api/webauthn/challenge');
+      if (challengeRes.ok) {
+        const challengeData = await challengeRes.json();
+        challengeBytes = Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0));
+      }
+    } catch (e) {}
+
+    if (!challengeBytes) {
+      challengeBytes = generateClientChallenge();
+    }
 
     const chromeVer = getChromeVersion();
     const publicKeyOptions = {
-      challenge: Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0)),
+      challenge: challengeBytes,
       rpId: window.location.hostname || 'localhost',
       userVerification: 'preferred',
       allowCredentials: [],

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Action Buttons Demo | Immediate UI Mode Showcase</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
   <div class="container">
@@ -108,7 +108,7 @@
   </div>
 
   <script type="module">
-    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from '/static/js/app.js';
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from "./static/js/app.js";
 
     initImmediateShowcase('/actions.html');
 
@@ -168,7 +168,7 @@
                   No passkey found on this device. Sign in or create a passkey to interact:
                 </p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                  <a href="/register.html" class="btn btn-primary" style="font-size: 0.85rem;">
+                  <a href="register.html" class="btn btn-primary" style="font-size: 0.85rem;">
                     🚀 Sign In or Register Passkey (/register.html)
                   </a>
                   <button id="imm-action-guest-btn" class="btn btn-outline" style="font-size: 0.85rem;">
