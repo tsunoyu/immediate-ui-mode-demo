@@ -24,7 +24,7 @@ cd immediate-ui-mode-demo
 
 ### 2. Open in Your Browser
 
-Open **http://localhost:3000** in Google Chrome (Chrome 131+).
+Open **http://localhost:3000** in Google Chrome (Chrome 149+ stable / GA).
 
 ---
 
