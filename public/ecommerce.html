@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Checkout Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Sesame Sneakers &mdash; E-Commerce Storefront</h2>
+          <p>
+            Demonstrating <strong>Sign-in Navigation Interception</strong> &amp; <strong>Dynamic Checkout Sign-in</strong>
+          </p>
+        </div>
+        <div>
+          <span id="imm-user-status" style="font-size: 0.9rem; color: var(--text-muted); margin-right: 12px;">Not signed in (Guest)</span>
+          <button id="imm-navbar-signin-btn" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.85rem;">Sign In</button>
+        </div>
+      </div>
+
+      <!-- Product Catalog Grid -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+        <div>
+          <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">Performance Running Collection</span>
+          <h3 style="margin: 4px 0 0 0; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em;">Men's &amp; Women's Running Shoes</h3>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <span class="imm-tag" style="background: #111; color: #fff;">Road Running</span>
+          <span class="imm-tag" style="background: var(--surface-subtle); color: var(--text-main);">Trail</span>
+          <span class="imm-tag" style="background: var(--surface-subtle); color: var(--text-main);">All-Day</span>
+        </div>
+      </div>
+
+      <div class="imm-product-grid">
+        <!-- Product 1 -->
+        <div class="imm-product-card">
+          <span class="imm-product-badge">New Release</span>
+          <div class="imm-product-img">👟</div>
+          <div class="imm-product-meta">Road Running &bull; Max Cushioning</div>
+          <h4 class="imm-product-title">Cloudsurfer Max</h4>
+          <div class="imm-product-color">Undyed-White / Eclipse</div>
+          <div class="imm-product-swatches">
+            <span class="imm-swatch" style="background: #f0f0f2;"></span>
+            <span class="imm-swatch" style="background: #111111;"></span>
+            <span class="imm-swatch" style="background: #e8a87c;"></span>
+          </div>
+          <div class="imm-product-footer">
+            <div class="imm-product-price">$179.99</div>
+            <button class="btn btn-outline imm-add-cart-btn" data-name="Cloudsurfer Max" data-price="179.99" style="padding: 7px 16px; font-size: 0.82rem;">
+              + Add to Bag
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="imm-product-card">
+          <span class="imm-product-badge" style="background: #00875a;">Bestseller</span>
+          <div class="imm-product-img">🏃</div>
+          <div class="imm-product-meta">Road Running &bull; High Energy Return</div>
+          <h4 class="imm-product-title">Cloudmonster 2</h4>
+          <div class="imm-product-color">Black / Magnet</div>
+          <div class="imm-product-swatches">
+            <span class="imm-swatch" style="background: #202124;"></span>
+            <span class="imm-swatch" style="background: #ffffff;"></span>
+            <span class="imm-swatch" style="background: #34a853;"></span>
+          </div>
+          <div class="imm-product-footer">
+            <div class="imm-product-price">$189.99</div>
+            <button class="btn btn-outline imm-add-cart-btn" data-name="Cloudmonster 2" data-price="189.99" style="padding: 7px 16px; font-size: 0.82rem;">
+              + Add to Bag
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="imm-product-card">
+          <div class="imm-product-img">🥾</div>
+          <div class="imm-product-meta">All-Weather &bull; Waterproof</div>
+          <h4 class="imm-product-title">Cloudrunner 2 WP</h4>
+          <div class="imm-product-color">Glacier / Meadow</div>
+          <div class="imm-product-swatches">
+            <span class="imm-swatch" style="background: #a0c4ff;"></span>
+            <span class="imm-swatch" style="background: #bdbdbd;"></span>
+            <span class="imm-swatch" style="background: #111111;"></span>
+          </div>
+          <div class="imm-product-footer">
+            <div class="imm-product-price">$169.99</div>
+            <button class="btn btn-outline imm-add-cart-btn" data-name="Cloudrunner 2 WP" data-price="169.99" style="padding: 7px 16px; font-size: 0.82rem;">
+              + Add to Bag
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shopping Bag & Checkout Section -->
+      <div style="margin-top: 40px;">
+        <div class="imm-cart-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em;">Shopping Bag</h3>
+            <span style="font-size: 0.82rem; font-weight: 600; color: var(--success);">✓ 1 Item</span>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">
+              <span>🚚 Free Express Shipping</span>
+              <span>Unlocked</span>
+            </div>
+            <div class="imm-free-shipping-bar">
+              <div class="imm-free-shipping-fill"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 14px;">
+            <div>
+              <div id="imm-cart-item-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">Cloudsurfer Max - size US 10.5</div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">Color: Undyed-White / Eclipse</div>
+            </div>
+            <span id="imm-cart-item-price" style="font-weight: 800; font-size: 1.05rem;">$179.99</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted);">
+            <span>Subtotal</span>
+            <span id="imm-cart-subtotal">$179.99</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted);">
+            <span>Express Delivery</span>
+            <span style="color: var(--success); font-weight: 600;">FREE</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; border-top: 1px solid var(--border-color); padding-top: 14px; margin-bottom: 20px; color: var(--text-main);">
+            <span>Total</span>
+            <span id="imm-cart-total">$179.99</span>
+          </div>
+
+          <button id="imm-checkout-btn" class="btn btn-primary btn-full" style="padding: 14px; font-size: 0.96rem; font-weight: 700;">
+            🔒 Secure Checkout with Passkey
+          </button>
+
+          <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center; margin-top: 12px; margin-bottom: 0;">
+            Returning shoppers sign in seamlessly in 1 tap with Immediate UI mode without leaving their bag.
+          </p>
+        </div>
+      </div>
+
+      <!-- Interactive Checkout Outcome & Web Modal Drawer -->
+      <div id="imm-checkout-result" style="display: none; margin-top: 28px; padding: 24px; border-radius: var(--radius-md); background: #ffffff; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);"></div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 E-Commerce Checkout Pattern (How it works)</h4>
+      <p style="color: #d1d1d6; margin-bottom: 12px;">
+        By invoking <code>navigator.credentials.get({ uiMode: 'immediate' })</code> when the user clicks <strong>Secure Checkout</strong>, returning customers sign in dynamically on-the-fly. If <code>NotAllowedError</code> is thrown (guest users or empty password manager), gracefully present guest checkout options.
+      </p>
+      <pre><code>document.getElementById('checkout-btn').addEventListener('click', async () => {
+  try {
+    // 1. Proactively offer immediate login before checkout
+    const credential = await navigator.credentials.get({
+      publicKey: { challenge: serverChallenge, rpId: 'example.com' },
+      uiMode: 'immediate'
+    });
+    // 2. Returning user verified! Complete order immediately.
+    completeOrder(credential);
+  } catch (error) {
+    if (error.name === 'NotAllowedError') {
+      // 3. No local credentials found.
+      // Seamlessly transition to the Guest Checkout & Sign-In web form!
+      showGuestCheckoutForm();
+    }
+  }
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/ecommerce.html');
+
+    const navbarSigninBtn = document.getElementById('imm-navbar-signin-btn');
+    const userStatusEl = document.getElementById('imm-user-status');
+    const checkoutBtn = document.getElementById('imm-checkout-btn');
+    const checkoutResult = document.getElementById('imm-checkout-result');
+
+    let currentUser = null;
+
+    function updateUserStatus(user) {
+      currentUser = user;
+      if (userStatusEl) {
+        if (user) {
+          userStatusEl.innerHTML = `Signed in as <strong>${user.username}</strong>`;
+          userStatusEl.style.color = '#00875a';
+          if (navbarSigninBtn) navbarSigninBtn.style.display = 'none';
+        } else {
+          userStatusEl.textContent = 'Not signed in (Guest)';
+          userStatusEl.style.color = '#66666e';
+          if (navbarSigninBtn) navbarSigninBtn.style.display = 'inline-flex';
+        }
+      }
+    }
+
+    if (navbarSigninBtn) {
+      navbarSigninBtn.addEventListener('click', async () => {
+        toast('Checking for instant passkey...');
+        await runImmediateAuth({
+          scenarioName: 'Navbar Sign-in Interceptor',
+          onSignIn: (user) => {
+            updateUserStatus(user);
+            toast(`Signed in as ${user.username} without detouring to login page!`);
+          },
+          onFallback: (error) => {
+            // Chrome DevRel Best Practice: If no passkey exists on this device,
+            // complete the intercepted navigation and redirect directly to the Sign-In / Sign-Up page!
+            toast('No passkey on this device &rarr; Navigating to Sign-In page...');
+            setTimeout(() => {
+              window.location.href = '/register.html';
+            }, 300);
+          },
+        });
+      });
+    }
+
+    document.querySelectorAll('.imm-add-cart-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const name = target.getAttribute('data-name') || 'Sneakers';
+        const price = target.getAttribute('data-price') || '179.99';
+
+        const nameEl = document.getElementById('imm-cart-item-name');
+        const priceEl = document.getElementById('imm-cart-item-price');
+        const subtotalEl = document.getElementById('imm-cart-subtotal');
+        const totalEl = document.getElementById('imm-cart-total');
+
+        if (nameEl) nameEl.textContent = `${name} - size US 10.5`;
+        if (priceEl) priceEl.textContent = `$${price}`;
+        if (subtotalEl) subtotalEl.textContent = `$${price}`;
+        if (totalEl) totalEl.textContent = `$${price}`;
+
+        toast(`Added "${name}" to your bag!`);
+      });
+    });
+
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', async () => {
+        if (checkoutResult) {
+          checkoutResult.style.display = 'block';
+          checkoutResult.style.background = '#f5f5f7';
+          checkoutResult.style.border = '1px solid #e5e5ea';
+          checkoutResult.style.color = '#111111';
+          checkoutResult.innerHTML = '🔄 Checking for returning customer credentials via Immediate UI mode...';
+        }
+
+        if (currentUser) {
+          showConfirmedOrder(currentUser);
+          return;
+        }
+
+        await runImmediateAuth({
+          scenarioName: 'E-Commerce Dynamic Checkout',
+          onSignIn: (user) => {
+            updateUserStatus(user);
+            showConfirmedOrder(user);
+          },
+          onFallback: (error) => {
+            if (checkoutResult) checkoutResult.style.display = 'none';
+
+            // Remove any existing modal
+            document.getElementById('imm-checkout-modal')?.remove();
+
+            const modalBackdrop = document.createElement('div');
+            modalBackdrop.id = 'imm-checkout-modal';
+            modalBackdrop.className = 'imm-modal-backdrop';
+
+            const currentTotal = document.getElementById('imm-cart-total')?.textContent || '$179.99';
+
+            modalBackdrop.innerHTML = `
+              <div class="imm-modal-dialog">
+                <button id="imm-modal-close-btn" class="imm-modal-close">&times;</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 18px;">
+                  <h3 style="margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em;">🛍️ Checkout Options</h3>
+                  <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Total: ${currentTotal}</span>
+                </div>
+
+                <p style="margin: 0 0 20px 0; font-size: 0.94rem; color: #555555; line-height: 1.55;">
+                  No passkey was found on this device for instant 1-tap checkout. Choose how you'd like to proceed:
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                  <!-- Option 1: Sign in with account / passkey -->
+                  <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 22px; background: var(--surface-subtle); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                      <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800;">Existing Account / Passkey</h4>
+                      <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 16px 0;">
+                        Use an existing passkey (e.g. on this device, another phone, or security key) to sign in and confirm your order.
+                      </p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                      <button id="imm-modal-passkey-login-btn" class="btn btn-primary btn-full" style="font-weight: 700;">
+                        🔑 Sign In with Passkey Now
+                      </button>
+                      <a href="/register.html" class="btn btn-outline btn-full" style="font-size: 0.84rem; text-align: center;">
+                        📝 Register New Passkey (/register.html)
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Option 2: Guest Checkout Form -->
+                  <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 22px; background: var(--surface);">
+                    <h4 style="margin: 0 0 12px 0; font-size: 1.05rem; font-weight: 800;">📦 Guest Checkout</h4>
+                    <div style="margin-bottom: 10px;">
+                      <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Full Name</label>
+                      <input id="guest-name" type="text" placeholder="e.g. Alex Morgan" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                      <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Email Address</label>
+                      <input id="guest-email" type="email" placeholder="e.g. alex.morgan@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+                    <button id="imm-guest-order-btn" class="btn btn-outline btn-full" style="font-weight: 700; border-color: var(--text-main);">
+                      Place Order as Guest (${currentTotal}) &rarr;
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+
+            document.body.appendChild(modalBackdrop);
+
+            // Close modal handlers
+            document.getElementById('imm-modal-close-btn')?.addEventListener('click', () => {
+              modalBackdrop.remove();
+            });
+
+            modalBackdrop.addEventListener('click', (e) => {
+              if (e.target === modalBackdrop) modalBackdrop.remove();
+            });
+
+            // Working Passkey Login inside Modal
+            const passkeyLoginBtn = document.getElementById('imm-modal-passkey-login-btn');
+            passkeyLoginBtn?.addEventListener('click', async () => {
+              passkeyLoginBtn.textContent = '🔄 Prompting passkey authenticator...';
+              passkeyLoginBtn.disabled = true;
+
+              try {
+                const challengeRes = await fetch('/api/webauthn/challenge');
+                const challengeData = await challengeRes.json();
+
+                const cred = await navigator.credentials.get({
+                  publicKey: {
+                    challenge: Uint8Array.from(atob(challengeData.challenge), (c) => c.charCodeAt(0)),
+                    rpId: window.location.hostname || 'localhost',
+                    userVerification: 'preferred',
+                    timeout: 60000,
+                  },
+                });
+
+                if (cred) {
+                  let username = 'Elisa Beckett';
+                  if (cred.response?.userHandle && typeof TextDecoder !== 'undefined') {
+                    try {
+                      username = new TextDecoder().decode(cred.response.userHandle) || username;
+                    } catch (e) {}
+                  }
+
+                  const signedInUser = {
+                    username: username,
+                    email: 'elisa.beckett@gmail.com',
+                    provider: 'Google Password Manager (Passkey)',
+                  };
+
+                  modalBackdrop.remove();
+                  updateUserStatus(signedInUser);
+                  showConfirmedOrder(signedInUser);
+                  toast(`🎉 Welcome back, ${signedInUser.username}! Order confirmed.`);
+                }
+              } catch (err) {
+                toast('Passkey sign-in cancelled or error: ' + (err.message || err.name));
+                passkeyLoginBtn.textContent = '🔑 Sign In with Passkey Now';
+                passkeyLoginBtn.disabled = false;
+              }
+            });
+
+            document.getElementById('imm-guest-order-btn')?.addEventListener('click', () => {
+              const guestNameInput = document.getElementById('guest-name');
+              const guestEmailInput = document.getElementById('guest-email');
+              const name = guestNameInput?.value.trim() || 'Guest Customer';
+              const email = guestEmailInput?.value.trim() || 'guest@example.com';
+
+              modalBackdrop.remove();
+
+              showConfirmedOrder({
+                username: name,
+                email: email,
+                provider: 'Guest Checkout',
+              });
+            });
+          },
+        });
+      });
+    }
+
+    function showConfirmedOrder(user) {
+      if (!checkoutResult) return;
+      checkoutResult.style.display = 'block';
+      checkoutResult.style.background = '#e6f4ea';
+      checkoutResult.style.border = '1px solid #00875a';
+      checkoutResult.style.color = '#00875a';
+      checkoutResult.innerHTML = `
+        <div style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em;">
+          🎉 Order #8849 Confirmed for ${user.username}!
+        </div>
+        <p style="margin: 8px 0 6px 0; color: #111111; font-size: 0.95rem;">
+          ${user.provider === 'Guest Checkout' 
+            ? 'Completed via <strong>Guest Checkout</strong> with zero login friction.' 
+            : 'Signed in dynamically with <strong>Immediate UI mode</strong> before checking out—zero detour to sign-in page!'}
+        </p>
+        <div style="font-size: 0.88rem; color: #555555;">
+          Confirmation receipt sent to <strong>${user.email}</strong> &bull; Authenticated via <em>${user.provider}</em>.
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

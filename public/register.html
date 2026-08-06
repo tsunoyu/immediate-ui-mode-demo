@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Discoverable Passkey | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>🔑 Create Discoverable Passkey (Live WebAuthn API)</h2>
+          <p>
+            Register a real WebAuthn resident passkey on <code>localhost</code> to test Live Immediate UI Mode in Chrome
+          </p>
+        </div>
+      </div>
+
+      <!-- Why this page is needed explanation -->
+      <div style="background: var(--surface-subtle); border: 1px solid var(--border-color); padding: 18px 22px; border-radius: var(--radius-md); margin-bottom: 28px; color: var(--text-main);">
+        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 800;">Why register a passkey first?</h4>
+        <p style="margin: 0 0 10px 0; font-size: 0.92rem; line-height: 1.55; color: var(--text-muted);">
+          In WebAuthn Immediate UI Mode (<code>uiMode: "immediate"</code>), Chrome checks the device's native credential store for discoverable resident keys matching <code>localhost</code>. If none exist, Chrome fails fast with <code>NotAllowedError</code> to avoid popping up an intrusive QR code dialog.
+        </p>
+        <p style="margin: 0; font-size: 0.92rem; line-height: 1.55; color: var(--text-muted);">
+          Clicking <strong>"Create Passkey"</strong> below invokes the real <code>navigator.credentials.create()</code> API with <code>residentKey: "required"</code> to register a resident passkey in your browser's platform authenticator (or Chrome DevTools Virtual Authenticator).
+        </p>
+      </div>
+
+      <!-- Registration Form Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 28px;">
+        <!-- Card 1: Create Passkey -->
+        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 26px; background: var(--surface);">
+          <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.2rem; font-weight: 800;">✨ Register Test Passkey</h3>
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px;">Email address</label>
+            <input id="reg-email" type="email" value="elisa.beckett@gmail.com" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.95rem;">
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px;">Display name</label>
+            <input id="reg-name" type="text" value="Elisa Beckett" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.95rem;">
+          </div>
+          <button id="imm-create-passkey-btn" class="btn btn-primary btn-full" style="font-size: 0.95rem; padding: 12px;">
+            🔑 Create Passkey with WebAuthn API
+          </button>
+        </div>
+
+        <!-- Card 2: Instructions -->
+        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 26px; background: var(--surface);">
+          <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.2rem; font-weight: 800;">💻 Chrome DevTools Testing Tip</h3>
+          <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; margin-bottom: 14px;">
+            If you are testing on a Linux developer workstation or environment without a hardware biometric authenticator:
+          </p>
+          <ol style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+            <li>Open Chrome DevTools (<code>F12</code>) &rarr; <strong>More Tools</strong> &rarr; <strong>WebAuthn</strong>.</li>
+            <li>Check <strong>Enable virtual authenticator environment</strong>.</li>
+            <li>Click <strong>New authenticator</strong> (ensure <em>Supports resident keys</em> is <strong>YES</strong>).</li>
+            <li>Click <strong>Create Passkey</strong> on this page to store the resident key!</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Quick Test Jump Banner -->
+      <div style="background: var(--surface-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px;">
+        <h4 style="margin: 0 0 10px 0; color: var(--text-main); font-weight: 800;">🚀 Jump to Demos to Test Immediate UI Mode</h4>
+        <p style="margin: 0 0 16px 0; color: var(--text-muted); font-size: 0.92rem;">
+          Once your passkey is created above, explore any of the real-world Immediate UI mode use cases:
+        </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="/ecommerce.html" class="btn btn-outline" style="font-size: 0.88rem;">🛍️ E-Commerce Checkout</a>
+          <a href="/actions.html" class="btn btn-outline" style="font-size: 0.88rem;">❤️ Action Buttons</a>
+          <a href="/passkey-button.html" class="btn btn-outline" style="font-size: 0.88rem;">🔑 Passkey Button</a>
+          <a href="/reauth.html" class="btn btn-outline" style="font-size: 0.88rem;">🔒 Step-Up Reauth</a>
+          <a href="/community.html" class="btn btn-outline" style="font-size: 0.88rem;">💬 Inline Commenting</a>
+          <a href="/gated.html" class="btn btn-outline" style="font-size: 0.88rem;">📄 Gated Downloads</a>
+          <a href="/switcher.html" class="btn btn-outline" style="font-size: 0.88rem;">🔄 Account Switcher</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 Discoverable Credential Creation Pattern</h4>
+      <pre><code>// To make a passkey available in Immediate UI Mode, set residentKey: "required"
+const credential = await navigator.credentials.create({
+  publicKey: {
+    challenge: serverChallenge,
+    rp: { name: "Immediate UI Mode Demo Site", id: "localhost" },
+    user: {
+      id: new TextEncoder().encode("elisa.beckett@gmail.com"),
+      name: "elisa.beckett@gmail.com",
+      displayName: "Elisa Beckett"
+    },
+    pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+    authenticatorSelection: {
+      residentKey: "required", // <-- Required for Immediate UI mode discoverability!
+      userVerification: "required"
+    }
+  }
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, createTestPasskey, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/register.html');
+
+    const createBtn = document.getElementById('imm-create-passkey-btn');
+
+    if (createBtn) {
+      createBtn.addEventListener('click', async () => {
+        const emailInput = document.getElementById('reg-email');
+        const nameInput = document.getElementById('reg-name');
+        const email = emailInput?.value || 'elisa.beckett@gmail.com';
+        const username = nameInput?.value || 'Elisa Beckett';
+
+        createBtn.textContent = '🔄 Creating passkey with browser API...';
+        createBtn.disabled = true;
+
+        const res = await createTestPasskey({ username, email });
+        createBtn.textContent = '🔑 Create Passkey with WebAuthn API';
+        createBtn.disabled = false;
+
+        if (res.success) {
+          toast(`🎉 Passkey registered for ${email}!`);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

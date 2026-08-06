@@ -1,0 +1,22 @@
+{
+  "name": "immediate-ui-mode-showcase",
+  "version": "1.0.0",
+  "description": "Standalone interactive demo & use-case showcase for Chrome WebAuthn / FedCM Immediate UI Mode (uiMode: 'immediate')",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test test.js"
+  },
+  "keywords": [
+    "webauthn",
+    "passkeys",
+    "immediate-ui-mode",
+    "fedcm",
+    "chrome-identity",
+    "authentication"
+  ],
+  "author": "Google DevRel & AI Coding Assistant",
+  "license": "Apache-2.0"
+}

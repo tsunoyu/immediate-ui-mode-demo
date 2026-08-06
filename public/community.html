@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inline Commenting Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Inline Community Commenting &mdash; New Use Case</h2>
+          <p>
+            Demonstrating zero-friction authentication before posting comments or replies without losing draft text
+          </p>
+        </div>
+        <div>
+          <span class="imm-tag new">Discovered Use Case</span>
+        </div>
+      </div>
+
+      <!-- Instructions / Benefits Alert -->
+      <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #1a3a5f;">
+        <strong>Why this use case increases conversion:</strong> On developer docs or blog posts, readers often type a comment while logged out. Forcing a redirect to a login page loses their typed text and scroll position. Immediate UI mode authenticates them on the spot and immediately posts their comment inline!
+      </div>
+
+      <!-- Article Content Snippet -->
+      <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; padding: 24px; margin-bottom: 24px;">
+        <span style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Chrome DevRel Blog &bull; May 2026</span>
+        <h3 style="margin: 8px 0 12px 0; font-size: 1.3rem;">Best Practices for Passkey Adoption in E-Commerce</h3>
+        <p style="color: #3c4043; line-height: 1.6; margin-bottom: 16px;">
+          Implementing passkeys can reduce checkout drop-off by up to 25%. When combined with Immediate UI mode, returning customers sign in seamlessly without leaving their shopping cart...
+        </p>
+
+        <!-- Comment Thread Section -->
+        <hr style="border: none; border-top: 1px solid #f1f3f4; margin: 20px 0;">
+        <h4 style="margin: 0 0 16px 0;">Discussion (<span id="imm-comment-count">1</span>)</h4>
+
+        <!-- Existing Comments -->
+        <div id="imm-comments-list" style="margin-bottom: 24px;">
+          <div style="display: flex; gap: 12px; margin-bottom: 16px; padding: 14px; background: #fafbfc; border-radius: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #4285f4; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700;">J</div>
+            <div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Jordan Lee <span style="font-weight: normal; color: var(--text-muted); font-size: 0.8rem;">• 2 hours ago</span></div>
+              <p style="margin: 6px 0 0 0; color: #3c4043; font-size: 0.92rem;">
+                Great breakdown! The fail-fast behavior of Immediate UI mode is especially useful because we don't bother users with QR code modals when no credentials exist locally.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Comment Textarea & Submit -->
+        <div style="background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;">
+          <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-main);">
+            Leave a comment <span style="font-weight: normal; color: var(--text-muted);">(Your draft is preserved across authentication!)</span>
+          </label>
+          <textarea id="imm-comment-input" rows="3" placeholder="Type your comment or feedback here..." style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.92rem; margin-bottom: 12px;">Immediate UI mode makes commenting so much smoother because I don't lose my scroll position!</textarea>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <span id="imm-comment-user-status" style="font-size: 0.82rem; color: var(--text-muted);">Not signed in &bull; Will authenticate on Post</span>
+            <button id="imm-post-comment-btn" class="btn btn-primary" style="font-size: 0.88rem;">
+              💬 Post Comment
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Output Log -->
+      <div id="imm-community-log" style="display: none; padding: 18px; border-radius: 10px; background: #f8f9fa; border: 1px solid var(--border-color);"></div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 Inline Commenting Code Pattern (How it works)</h4>
+      <pre><code>// 1. User clicks "Post Comment" while typing their feedback
+postCommentButton.addEventListener('click', async () => {
+  const draftText = commentInput.value;
+  if (!currentUser) {
+    try {
+      // 2. Invoke immediate UI mode—authenticating without page reload!
+      const cred = await navigator.credentials.get({
+        password: true,
+        publicKey: { challenge: authChallenge, rpId: 'example.com' },
+        uiMode: 'immediate'
+      });
+      currentUser = await verifyCredential(cred);
+    } catch (error) {
+      if (error.name === 'NotAllowedError') {
+        // 3. Fallback: prompt password form in a lightweight modal while preserving draftText!
+        return showInlineCommentAuthModal(draftText);
+      }
+    }
+  }
+  // 4. Authenticated! Post comment immediately with zero text loss.
+  appendCommentToThread(currentUser, draftText);
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/community.html');
+
+    const postBtn = document.getElementById('imm-post-comment-btn');
+    const inputEl = document.getElementById('imm-comment-input');
+    const listEl = document.getElementById('imm-comments-list');
+    const countEl = document.getElementById('imm-comment-count');
+    const statusEl = document.getElementById('imm-comment-user-status');
+    const logEl = document.getElementById('imm-community-log');
+
+    let currentUser = null;
+    let commentCount = 1;
+
+    function updateUserStatus(user) {
+      currentUser = user;
+      if (statusEl) {
+        if (user) {
+          statusEl.innerHTML = `Signed in as <strong>${user.username}</strong>`;
+          statusEl.style.color = '#137333';
+        } else {
+          statusEl.textContent = 'Not signed in • Will authenticate on Post';
+          statusEl.style.color = '#5f6368';
+        }
+      }
+    }
+
+    if (postBtn) {
+      postBtn.addEventListener('click', async () => {
+        const text = inputEl ? inputEl.value.trim() : 'Awesome blog post!';
+        if (!text) {
+          toast('Please enter a comment first.');
+          return;
+        }
+
+        if (currentUser) {
+          addCommentToDOM(currentUser, text);
+          return;
+        }
+
+        if (logEl) {
+          logEl.style.display = 'block';
+          logEl.style.background = '#e8f0fe';
+          logEl.style.border = '1px solid #1a73e8';
+          logEl.style.color = '#1a73e8';
+          logEl.innerHTML = '🔄 Authenticating via Immediate UI mode before posting your comment...';
+        }
+
+        await runImmediateAuth({
+          scenarioName: 'Inline Community Commenting',
+          onSignIn: (user) => {
+            updateUserStatus(user);
+            addCommentToDOM(user, text);
+          },
+          onFallback: (error) => {
+            renderNotAllowedFallback({
+              containerId: 'imm-community-log',
+              scenarioName: 'Inline Community Commenting',
+              error,
+              onRetry: () => postBtn.click(),
+            });
+          },
+        });
+      });
+    }
+
+    function addCommentToDOM(user, text) {
+      if (listEl) {
+        const initial = user.username ? user.username.charAt(0).toUpperCase() : 'U';
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; gap:12px; margin-bottom:16px; padding:14px; background:#fafbfc; border-radius:8px; border-left:4px solid #1a73e8;';
+        row.innerHTML = `
+          <div style="width:36px; height:36px; border-radius:50%; background:#1a73e8; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">${initial}</div>
+          <div>
+            <div style="font-weight:600; font-size:0.9rem; color:#202124;">
+              ${user.username}
+              <span style="font-weight:normal; color:#137333; font-size:0.75rem; margin-left:6px; background:#e6f4ea; padding:2px 6px; border-radius:4px;">Verified (${user.credentialType})</span>
+              <span style="font-weight:normal; color:#5f6368; font-size:0.8rem; margin-left:6px;">• Just now</span>
+            </div>
+            <p style="margin:6px 0 0 0; color:#3c4043; font-size:0.92rem;">${text}</p>
+          </div>
+        `;
+        listEl.prepend(row);
+      }
+
+      commentCount++;
+      if (countEl) countEl.textContent = String(commentCount);
+      if (inputEl) inputEl.value = '';
+
+      if (logEl) {
+        logEl.style.display = 'block';
+        logEl.style.background = '#e6f4ea';
+        logEl.style.border = '1px solid #137333';
+        logEl.style.color = '#137333';
+        logEl.innerHTML = `
+          <div style="font-size: 1.1rem; font-weight: 700;">
+            🎉 Comment Published for ${user.username}!
+          </div>
+          <p style="margin: 6px 0 0 0; color: #202124;">
+            Authenticated on-the-fly without losing a single character of typed text or leaving the article!
+          </p>
+        `;
+      }
+
+      toast('Comment published inline!');
+    }
+  </script>
+</body>
+</html>

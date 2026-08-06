@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Action Buttons Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Action Buttons Demo &mdash; In-Context Engagement</h2>
+          <p>
+            Demonstrating on-the-fly authentication for <strong>Like (&hearts;)</strong>, <strong>Bookmark (&starf;)</strong>, and <strong>Add to Wishlist (+)</strong> actions
+          </p>
+        </div>
+        <div>
+          <span id="imm-actions-user-status" style="font-size: 0.9rem; color: var(--text-muted);">Not signed in (Guest)</span>
+        </div>
+      </div>
+
+      <!-- Instructions / Benefits Alert -->
+      <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #1a3a5f;">
+        <strong>Why this matters:</strong> Traditionally, requiring a login to "Like" or "Bookmark" forces a page redirect—causing users to abandon the action. With Immediate UI mode, clicking an action button prompts them in-place and immediately saves their action!
+      </div>
+
+      <!-- Product / Content Cards Grid -->
+      <div class="imm-product-grid">
+        <div class="imm-product-card">
+          <div class="imm-product-img" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2.5rem;">🎧</div>
+          <h4 style="margin: 8px 0 4px 0;">Studio Pro Wireless Headphones</h4>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 14px;">High-fidelity audio with active noise canceling.</p>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button class="imm-action-btn like-btn" data-id="hp-101" data-label="Headphones Like" style="padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; font-weight: 600; color: #d93025; transition: all 0.2s;">
+              &hearts; <span class="like-count">12</span>
+            </button>
+            <button class="imm-action-btn bookmark-btn" data-id="hp-101" data-label="Headphones Bookmark" style="padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; font-weight: 600; color: var(--primary); transition: all 0.2s;">
+              &starf; Bookmark
+            </button>
+          </div>
+        </div>
+
+        <div class="imm-product-card">
+          <div class="imm-product-img" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2.5rem;">⌚</div>
+          <h4 style="margin: 8px 0 4px 0;">Smart Titanium Sport Watch</h4>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 14px;">Always-on AMOLED display with heart rate tracking.</p>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button class="imm-action-btn like-btn" data-id="wt-202" data-label="Sport Watch Like" style="padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; font-weight: 600; color: #d93025; transition: all 0.2s;">
+              &hearts; <span class="like-count">38</span>
+            </button>
+            <button class="imm-action-btn bookmark-btn" data-id="wt-202" data-label="Sport Watch Bookmark" style="padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; font-weight: 600; color: var(--primary); transition: all 0.2s;">
+              &starf; Bookmark
+            </button>
+          </div>
+        </div>
+
+        <div class="imm-product-card">
+          <div class="imm-product-img" style="background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2.5rem;">📷</div>
+          <h4 style="margin: 8px 0 4px 0;">4K Mirrorless Digital Camera</h4>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 14px;">Compact body with dual card slots and IBIS.</p>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button class="imm-action-btn like-btn" data-id="cm-303" data-label="Camera Like" style="padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; font-weight: 600; color: #d93025; transition: all 0.2s;">
+              &hearts; <span class="like-count">85</span>
+            </button>
+            <button class="imm-action-btn bookmark-btn" data-id="cm-303" data-label="Camera Bookmark" style="padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; font-weight: 600; color: var(--primary); transition: all 0.2s;">
+              &starf; Bookmark
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Activity Log -->
+      <div id="imm-actions-log" style="display: none; margin-top: 24px; padding: 18px; border-radius: 10px; background: #f8f9fa; border: 1px solid var(--border-color);"></div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 Action Buttons Pattern (How it works)</h4>
+      <p style="color: #bdc1c6; margin-bottom: 12px;">
+        When a user clicks an action button (Like, Bookmark, Wishlist), your click handler checks authentication. If logged out, calling <code>navigator.credentials.get({ uiMode: 'immediate' })</code> prompts the user in the same context. Upon success, you immediately update the button state!
+      </p>
+      <pre><code>likeButton.addEventListener('click', async (event) => {
+  if (!currentUser) {
+    try {
+      // Prompt user in-place without redirecting!
+      const cred = await navigator.credentials.get({
+        password: true,
+        publicKey: { challenge: serverChallenge, rpId: 'example.com' },
+        uiMode: 'immediate'
+      });
+      currentUser = await verifyCredential(cred);
+    } catch (err) {
+      if (err.name === 'NotAllowedError') {
+        // Fallback: show inline toast or standard sign-in prompt
+        return showInlineAuthModal();
+      }
+    }
+  }
+  // User authenticated! Record the Like immediately.
+  await sendLikeRequest(itemId);
+  likeButton.classList.add('liked');
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/actions.html');
+
+    const statusEl = document.getElementById('imm-actions-user-status');
+    const logEl = document.getElementById('imm-actions-log');
+    let currentUser = null;
+
+    function updateUserStatus(user) {
+      currentUser = user;
+      if (statusEl) {
+        if (user) {
+          statusEl.innerHTML = `Signed in as <strong>${user.username}</strong>`;
+          statusEl.style.color = '#137333';
+        } else {
+          statusEl.textContent = 'Not signed in (Guest)';
+          statusEl.style.color = '#5f6368';
+        }
+      }
+    }
+
+    document.querySelectorAll('.imm-action-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const target = e.currentTarget;
+        const isLike = target.classList.contains('like-btn');
+        const label = target.getAttribute('data-label') || 'Item Action';
+
+        if (currentUser) {
+          performAction(target, isLike, label, currentUser);
+          return;
+        }
+
+        if (logEl) {
+          logEl.style.display = 'block';
+          logEl.style.background = '#e8f0fe';
+          logEl.style.border = '1px solid #1a73e8';
+          logEl.style.color = '#1a73e8';
+          logEl.innerHTML = `🔄 Attempting Immediate UI Mode authentication for action "<strong>${label}</strong>"...`;
+        }
+
+        await runImmediateAuth({
+          scenarioName: `Action Button (${label})`,
+          onSignIn: (user) => {
+            updateUserStatus(user);
+            performAction(target, isLike, label, user);
+          },
+          onFallback: (error) => {
+            if (logEl) {
+              logEl.style.display = 'block';
+              logEl.style.background = '#f5f5f7';
+              logEl.style.border = '1px solid #111111';
+              logEl.style.color = '#111111';
+              logEl.innerHTML = `
+                <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px;">
+                  🔒 Sign in to complete: <em>${label}</em>
+                </div>
+                <p style="margin: 0 0 14px 0; font-size: 0.9rem; color: #555;">
+                  No passkey found on this device. Sign in or create a passkey to interact:
+                </p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <a href="/register.html" class="btn btn-primary" style="font-size: 0.85rem;">
+                    🚀 Sign In or Register Passkey (/register.html)
+                  </a>
+                  <button id="imm-action-guest-btn" class="btn btn-outline" style="font-size: 0.85rem;">
+                    ⭐ Continue as Guest
+                  </button>
+                </div>
+              `;
+
+              document.getElementById('imm-action-guest-btn')?.addEventListener('click', () => {
+                performAction(target, isLike, label, { username: 'Guest User' });
+                logEl.style.display = 'none';
+              });
+            }
+          },
+        });
+      });
+    });
+
+    function performAction(target, isLike, label, user) {
+      if (isLike) {
+        const countSpan = target.querySelector('.like-count');
+        if (countSpan) {
+          const currentVal = parseInt(countSpan.textContent || '0', 10);
+          countSpan.textContent = String(currentVal + 1);
+        }
+        target.style.background = '#fce8e6';
+        target.style.borderColor = '#d93025';
+      } else {
+        target.innerHTML = '★ Bookmarked!';
+        target.style.background = '#e8f0fe';
+        target.style.borderColor = '#1a73e8';
+      }
+
+      if (logEl) {
+        logEl.style.display = 'block';
+        logEl.style.background = '#e6f4ea';
+        logEl.style.border = '1px solid #137333';
+        logEl.style.color = '#137333';
+        logEl.innerHTML = `
+          <div style="font-size: 1.1rem; font-weight: 700;">
+            🎉 Action Recorded: "${label}"!
+          </div>
+          <p style="margin: 6px 0 0 0; color: #202124;">
+            Authenticated on-the-fly as <strong>${user.username}</strong> without a single page reload or navigation!
+          </p>
+        `;
+      }
+
+      toast(`"${label}" saved for ${user.username}!`);
+    }
+  </script>
+</body>
+</html>

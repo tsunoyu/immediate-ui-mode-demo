@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Immediate UI Mode Showcase | Chrome Identity 2026</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <!-- Hero Section -->
+    <section class="imm-demo-container" style="background: linear-gradient(135deg, #f8fafd 0%, #edf2fa 100%); border-color: #d2e3fc;">
+      <div style="max-width: 840px;">
+        <!-- Origin Trial / Feature Alert (matching deephand.github.io) -->
+        <div id="imm-origin-trial-banner" style="background: #e6f4ea; border-left: 4px solid #137333; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; color: #0d652d; font-size: 0.9rem;">
+          <strong>Now in Origin Trial!</strong> Immediate UI Mode is available for testing in Chrome 131+.
+          <a href="https://developer.chrome.com/docs/identity/immediate-ui-mode" target="_blank" style="color: #137333; font-weight: 600; text-decoration: underline; margin-left: 6px;">Learn more &amp; register origin &rarr;</a>
+        </div>
+
+        <h2 style="color: var(--primary); margin-top: 0; font-size: 1.65rem;">Immediate UI Mode for Web Logins (uiMode: 'immediate')</h2>
+        <p style="font-size: 1.05rem; color: #3c4043; line-height: 1.6;">
+          <strong>Immediate UI mode</strong> is a unified web platform capability designed to streamline sign-in flows by proactively offering saved passkeys and managed passwords directly to users when they reach a sign-in moment—such as clicking a <em>Sign In</em>, <em>Checkout</em>, or <em>Like</em> button.
+        </p>
+
+        <!-- Interactive Settings Box matching deephand repo pattern -->
+        <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-top: 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+          <h4 style="margin: 0 0 12px 0; font-size: 0.95rem; color: var(--text-main);">Interactive Sign-in Parameter Controls:</h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 16px; font-size: 0.9rem;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input id="toggle-immediate" type="checkbox" checked style="width: 16px; height: 16px;">
+              <span>Use <code>mediation/uiMode: 'immediate'</code></span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input id="toggle-passkeys" type="checkbox" checked style="width: 16px; height: 16px;">
+              <span>Request Passkeys</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input id="toggle-passwords" type="checkbox" checked style="width: 16px; height: 16px;">
+              <span>Request Passwords</span>
+            </label>
+          </div>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <button id="imm-register-now-btn" class="btn btn-outline" style="padding: 10px 18px; border-color:#137333; color:#137333; font-weight:700;">
+              🔑 Step 1: Register Passkey in Browser/Virtual Authenticator
+            </button>
+            <button id="imm-test-now-btn" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.95rem;">
+              ⚡ Step 2: Test Immediate UI Mode Here
+            </button>
+            <a href="/ecommerce.html" class="btn btn-outline" style="padding: 10px 18px;">
+              🛍️ Explore E-Commerce Checkout Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Hub Status Display -->
+    <div id="imm-hub-status-log" style="display: none; margin-bottom: 24px; padding: 18px; border-radius: 10px; background: #e8f0fe; border: 1px solid var(--primary); color: var(--primary); font-weight: 600;"></div>
+
+    <!-- Key Benefits Grid -->
+    <h3 style="margin-top: 36px; margin-bottom: 16px;">Why use Immediate UI Mode? (Core Benefits)</h3>
+    <div class="imm-card-grid">
+      <div class="imm-card">
+        <div class="imm-card-header">
+          <h4 class="imm-card-title">🚀 Skips Cross-Device Options</h4>
+          <span class="imm-tag do">Fail-Fast</span>
+        </div>
+        <p class="imm-card-desc">
+          Some users are confused by QR code dialogs for cross-device flows. Immediate UI mode fails fast and throws a <code>NotAllowedError</code> immediately when there are no available credentials, avoiding external key/QR interruptions.
+        </p>
+      </div>
+      <div class="imm-card">
+        <div class="imm-card-header">
+          <h4 class="imm-card-title">👤 Accounts over Credentials</h4>
+          <span class="imm-tag do">Intuitive UX</span>
+        </div>
+        <p class="imm-card-desc">
+          Immediate UI mode displays a friendly list of user accounts with avatars instead of generic credential prompts. The browser intelligently picks the best available sign-in option (passkey or password).
+        </p>
+      </div>
+      <div class="imm-card">
+        <div class="imm-card-header">
+          <h4 class="imm-card-title">⚡ In-Context Sign-in</h4>
+          <span class="imm-tag do">Zero Detour</span>
+        </div>
+        <p class="imm-card-desc">
+          Users can authenticate dynamically right where they are—before checking out, when liking a post, or downloading a resource—without detouring to a separate sign-in page and losing their state.
+        </p>
+      </div>
+      <div class="imm-card">
+        <div class="imm-card-header">
+          <h4 class="imm-card-title">🛡️ Progressive Enhancement</h4>
+          <span class="imm-tag do">Graceful Fallback</span>
+        </div>
+        <p class="imm-card-desc">
+          If the browser doesn't support immediate UI mode or if no credentials exist, the API rejects silently. Your site can gracefully fall back to existing sign-in forms or guest checkout.
+        </p>
+      </div>
+    </div>
+
+    <!-- Interactive Use Case Demo Catalog -->
+    <h3 style="margin-top: 40px; margin-bottom: 16px;">Interactive Use-Case Demos &amp; Developer Walkthroughs</h3>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">
+      We designed these interactive sample pages to cover recommended <strong>Do-s</strong> from the Chrome Identity guidelines as well as <strong>newly discovered use cases</strong> to inspire your application architecture.
+    </p>
+
+    <div class="imm-card-grid">
+      <div class="imm-card">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">1. E-Commerce Checkout</h4>
+            <span class="imm-tag do">Recommended Do</span>
+          </div>
+          <p class="imm-card-desc">
+            Allow returning users to sign in dynamically before checking out, without navigating away from the shopping cart. Guest shoppers fall back seamlessly to guest checkout.
+          </p>
+        </div>
+        <a href="/ecommerce.html" class="btn btn-outline btn-full">
+          Launch Storefront Demo &rarr;
+        </a>
+      </div>
+
+      <div class="imm-card">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">2. Action Buttons (Like, Bookmark)</h4>
+            <span class="imm-tag do">Recommended Do</span>
+          </div>
+          <p class="imm-card-desc">
+            Users sign in on-the-fly after clicking "Like", "Bookmark", or "Wishlist", recording their action seamlessly without page navigation or lost context.
+          </p>
+        </div>
+        <a href="/actions.html" class="btn btn-outline btn-full">
+          Launch Actions Demo &rarr;
+        </a>
+      </div>
+
+      <div class="imm-card">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">3. Sign-in with Passkey Button</h4>
+            <span class="imm-tag do">Recommended Do</span>
+          </div>
+          <p class="imm-card-desc">
+            How to implement a dedicated "Sign in with a passkey" button combined with password/federated fallback forms for cross-browser progressive enhancement.
+          </p>
+        </div>
+        <a href="/passkey-button.html" class="btn btn-outline btn-full">
+          Launch Passkey Button Demo &rarr;
+        </a>
+      </div>
+
+      <div class="imm-card">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">4. Reauthentication</h4>
+            <span class="imm-tag do">Recommended Do</span>
+          </div>
+          <p class="imm-card-desc">
+            Reauthenticate already signed-in users on-the-fly before sensitive actions like authorizing payments, changing shipping addresses, or generating API keys.
+          </p>
+        </div>
+        <a href="/reauth.html" class="btn btn-outline btn-full">
+          Launch Reauth Demo &rarr;
+        </a>
+      </div>
+
+      <div class="imm-card" style="border-color: var(--primary);">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">5. Inline Community Commenting</h4>
+            <span class="imm-tag new">New Use Case</span>
+          </div>
+          <p class="imm-card-desc">
+            Prevent lost draft text! Users type a comment on docs or articles, hit "Post", and Immediate UI mode signs them in inline before publishing the comment.
+          </p>
+        </div>
+        <a href="/community.html" class="btn btn-primary btn-full">
+          Launch Commenting Demo &rarr;
+        </a>
+      </div>
+
+      <div class="imm-card" style="border-color: var(--primary);">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">6. Gated Content &amp; Downloads</h4>
+            <span class="imm-tag new">New Use Case</span>
+          </div>
+          <p class="imm-card-desc">
+            Let developers unlock whitepapers, research reports, or premium downloads with a single click—authenticating on the spot without leaving the page.
+          </p>
+        </div>
+        <a href="/gated.html" class="btn btn-primary btn-full">
+          Launch Gated Demo &rarr;
+        </a>
+      </div>
+
+      <div class="imm-card" style="border-color: var(--primary);">
+        <div>
+          <div class="imm-card-header">
+            <h4 class="imm-card-title">7. Quick Account Switcher</h4>
+            <span class="imm-tag new">New Use Case</span>
+          </div>
+          <p class="imm-card-desc">
+            In multi-account SaaS apps or developer dashboards, let users click "Switch Account" in the top bar to pick another account from the browser's native list.
+          </p>
+        </div>
+        <a href="/switcher.html" class="btn btn-primary btn-full">
+          Launch Account Switcher &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Feature Detection & Implementation Reference -->
+    <div class="imm-code-panel">
+      <h4>Feature Detection &amp; Basic API Call Reference</h4>
+      <pre><code>// 1. Check feature support before offering immediate UI mode
+const capabilities = await PublicKeyCredential.getClientCapabilities();
+if (capabilities.immediateGet) {
+  console.log("Immediate UI mode is supported by this browser.");
+}
+
+// 2. Request credentials with uiMode: 'immediate'
+try {
+  const cred = await navigator.credentials.get({
+    password: true, // Include password credentials
+    publicKey: {
+      challenge: serverGeneratedChallenge,
+      rpId: 'example.com'
+    },
+    uiMode: 'immediate'
+  });
+  // Handle successful sign-in with cred
+} catch (error) {
+  if (error.name === 'NotAllowedError') {
+    // Fails fast! User cancelled or no saved credentials exist.
+    // Show fallback UI: standard sign-in form, guest checkout, etc.
+    showFallbackUI();
+  }
+}</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, createTestPasskey, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/');
+
+    const regBtn = document.getElementById('imm-register-now-btn');
+    const testBtn = document.getElementById('imm-test-now-btn');
+    const statusLog = document.getElementById('imm-hub-status-log');
+
+    if (regBtn) {
+      regBtn.addEventListener('click', async () => {
+        regBtn.textContent = '🔄 Registering in authenticator...';
+        regBtn.disabled = true;
+        const res = await createTestPasskey({ username: 'Elisa Beckett', email: 'elisa.beckett@gmail.com' });
+        regBtn.textContent = '🔑 Step 1: Register Passkey in Browser/Virtual Authenticator';
+        regBtn.disabled = false;
+        if (statusLog) {
+          statusLog.style.display = 'block';
+          statusLog.style.background = '#e6f4ea';
+          statusLog.style.color = '#137333';
+          statusLog.innerHTML = `
+            <div>🎉 <strong>Step 1 Complete: Resident Passkey Registered!</strong></div>
+            <div style="font-size:0.9rem; margin-top:6px; font-weight:normal;">
+              Registered credential for: <strong>Elisa Beckett</strong> (<code>elisa.beckett@gmail.com</code>)<br>
+              Now click <strong>⚡ Step 2: Test Immediate UI Mode Here</strong> below to see Immediate UI mode succeed instantly!
+            </div>
+          `;
+        }
+      });
+    }
+
+    if (testBtn) {
+      testBtn.addEventListener('click', async () => {
+        const useImmediate = document.getElementById('toggle-immediate')?.checked ?? true;
+        const reqPasskeys = document.getElementById('toggle-passkeys')?.checked ?? true;
+        const reqPasswords = document.getElementById('toggle-passwords')?.checked ?? true;
+
+        if (statusLog) {
+          statusLog.style.display = 'block';
+          statusLog.style.background = '#e8f0fe';
+          statusLog.style.color = '#1a73e8';
+          statusLog.innerHTML = `🔄 Triggering WebAuthn API (${useImmediate ? "uiMode: 'immediate'" : 'standard native browser modal'})...`;
+        }
+
+        await runImmediateAuth({
+          scenarioName: 'Hub Overview Test',
+          useImmediate,
+          reqPasskeys,
+          reqPasswords,
+          onSignIn: (user) => {
+            if (statusLog) {
+              statusLog.style.background = '#e6f4ea';
+              statusLog.style.color = '#137333';
+              statusLog.innerHTML = `
+                <div>🎉 <strong>Authentication Succeeded!</strong></div>
+                <div style="font-size:0.9rem; margin-top:6px; font-weight:normal;">
+                  Signed in as: <strong>${user.username}</strong> (${user.email})<br>
+                  Credential Type: <strong>${user.credentialType.toUpperCase()}</strong> via <em>${user.provider}</em><br>
+                  <em>No page reload or external QR dialog was required!</em>
+                </div>
+              `;
+            }
+            toast(`Signed in successfully as ${user.username}!`);
+          },
+          onFallback: (error) => {
+            renderNotAllowedFallback({
+              containerId: 'imm-hub-status-log',
+              scenarioName: 'Hub Overview Test',
+              error,
+              onRetry: () => testBtn.click(),
+            });
+            toast('NotAllowedError caught: Fast-Fail behavior.');
+          },
+        });
+      });
+    }
+  </script>
+</body>
+</html>

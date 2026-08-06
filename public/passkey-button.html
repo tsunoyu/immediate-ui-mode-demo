@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passkey Button Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Sign-in with a Passkey Button &mdash; Progressive Enhancement</h2>
+          <p>
+            Demonstrating why a dedicated <strong>Sign-in with a passkey</strong> button should be paired with fallback forms
+          </p>
+        </div>
+      </div>
+
+      <!-- Educational Comparison Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 24px;">
+        <!-- Recommended Pattern -->
+        <div style="border: 2px solid var(--success); border-radius: 12px; padding: 20px; background: #fcfdfe;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="margin: 0; color: var(--success); font-size: 1.1rem;">✅ Recommended Pattern</h3>
+            <span class="imm-tag do">DO</span>
+          </div>
+          <p style="font-size: 0.88rem; color: #3c4043; line-height: 1.5; margin-bottom: 18px;">
+            Combine a prominent <strong>"Sign-in with a passkey"</strong> button (powered by Immediate UI mode) with a secondary password form or federated login button.
+          </p>
+
+          <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; max-width: 340px; margin: 0 auto;">
+            <button id="imm-passkey-btn" class="btn btn-primary btn-full" style="margin-bottom: 14px;">
+              🔑 Sign in with a Passkey
+            </button>
+
+            <div style="display: flex; align-items: center; margin: 12px 0; color: var(--text-muted); font-size: 0.8rem;">
+              <hr style="flex: 1; border: none; border-top: 1px solid var(--border-color);">
+              <span style="padding: 0 10px;">OR USE A FORM</span>
+              <hr style="flex: 1; border: none; border-top: 1px solid var(--border-color);">
+            </div>
+
+            <div style="text-align: left; margin-bottom: 10px;">
+              <input id="email-input" type="text" placeholder="Email address or username" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.88rem; margin-bottom: 8px;">
+              <input type="password" placeholder="Password" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.88rem; margin-bottom: 10px;">
+              <button class="btn btn-outline btn-full" style="font-size: 0.85rem;">
+                Sign in with Password
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Anti-Pattern Explanation -->
+        <div style="border: 2px solid var(--warning); border-radius: 12px; padding: 20px; background: #fffcf8;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="margin: 0; color: var(--warning); font-size: 1.1rem;">❓ Why not just a unified "Sign in" button?</h3>
+            <span class="imm-tag" style="background: var(--warning-bg); color: var(--warning);">Chrome Guidance</span>
+          </div>
+          <p style="font-size: 0.88rem; color: #3c4043; line-height: 1.5; margin-bottom: 16px;">
+            If a single generic button queries both passwords and passkeys, Safari and Firefox will currently only display passkeys because they do not yet support Immediate UI mode and password credentials in the unified picker.
+          </p>
+          <div style="background: #fff8e6; border: 1px solid #ffe599; border-radius: 8px; padding: 14px; font-size: 0.85rem; color: #5c3b00; line-height: 1.5;">
+            <strong>Recommendation:</strong> Always provide an explicit password form and/or federated login buttons as progressive enhancement fallbacks so all users can sign in reliably on any browser!
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Demo Output Log -->
+      <div id="imm-passkey-btn-log" style="display: none; padding: 18px; border-radius: 10px; background: #f8f9fa; border: 1px solid var(--border-color);"></div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 Sign-in with a Passkey Button Code Pattern</h4>
+      <pre><code>// 1. Primary Button: Attempts immediate UI mode passkey / account picker
+passkeyButton.addEventListener('click', async () => {
+  try {
+    const cred = await navigator.credentials.get({
+      password: true,
+      publicKey: { challenge: serverChallenge, rpId: 'example.com' },
+      uiMode: 'immediate'
+    });
+    handleSuccessfulSignIn(cred);
+  } catch (error) {
+    if (error.name === 'NotAllowedError') {
+      // 2. Progressive fallback: focus the email/password form below!
+      document.getElementById('email-input').focus();
+    }
+  }
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/passkey-button.html');
+
+    const passkeyBtn = document.getElementById('imm-passkey-btn');
+    const logEl = document.getElementById('imm-passkey-btn-log');
+
+    if (passkeyBtn) {
+      passkeyBtn.addEventListener('click', async () => {
+        if (logEl) {
+          logEl.style.display = 'block';
+          logEl.style.background = '#e8f0fe';
+          logEl.style.border = '1px solid #1a73e8';
+          logEl.style.color = '#1a73e8';
+          logEl.innerHTML = '🔄 Requesting passkey via Immediate UI mode (navigator.credentials.get)...';
+        }
+
+        await runImmediateAuth({
+          scenarioName: 'Sign-in with Passkey Button',
+          onSignIn: (user) => {
+            if (logEl) {
+              logEl.style.background = '#e6f4ea';
+              logEl.style.border = '1px solid #137333';
+              logEl.style.color = '#137333';
+              logEl.innerHTML = `
+                <div style="font-size: 1.15rem; font-weight: 700;">
+                  🎉 Passkey Button Sign-In Succeeded!
+                </div>
+                <p style="margin: 6px 0 0 0; color: #202124;">
+                  Authenticated as <strong>${user.username}</strong> (${user.email}) via native Chromium account picker dialog.
+                </p>
+              `;
+            }
+            toast(`Welcome back, ${user.username}!`);
+          },
+          onFallback: (error) => {
+            renderNotAllowedFallback({
+              containerId: 'imm-passkey-btn-log',
+              scenarioName: 'Sign-in with Passkey Button',
+              error,
+              onRetry: () => passkeyBtn.click(),
+            });
+            toast('No passkey found: falling back to password form.');
+            document.getElementById('email-input')?.focus();
+          },
+        });
+      });
+    }
+  </script>
+</body>
+</html>

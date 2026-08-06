@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reauthentication Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Reauthentication Demo &mdash; Protecting Sensitive Actions</h2>
+          <p>
+            Demonstrating step-up authentication for already signed-in users before payments or account changes
+          </p>
+        </div>
+        <div>
+          <span style="font-size: 0.9rem; color: var(--success); font-weight: 600;">Signed in as Elisa Beckett (Session: Active)</span>
+        </div>
+      </div>
+
+      <!-- Instructions / Benefits Alert -->
+      <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #1a3a5f;">
+        <strong>Why this matters:</strong> When an already signed-in user wants to perform a sensitive operation (like changing a shipping address or making a large payment), forcing them through a separate reauthentication page breaks workflow. Immediate UI mode prompts a native credential dialog on the fly!
+      </div>
+
+      <!-- Sensitive Action Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px;">
+        <!-- Action 1 -->
+        <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; background: #fafbfc;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 1.6rem;">💳</span>
+            <h3 style="margin: 0; font-size: 1.08rem;">Authorize $149.99 Payment</h3>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 16px;">
+            Verify user identity before charging the saved credit card (Visa ending in 4242) for order #8849.
+          </p>
+          <button class="btn btn-primary btn-full imm-reauth-btn" data-action="Authorize Payment ($149.99)">
+            🔒 Reauthenticate &amp; Pay
+          </button>
+        </div>
+
+        <!-- Action 2 -->
+        <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; background: #fafbfc;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 1.6rem;">📍</span>
+            <h3 style="margin: 0; font-size: 1.08rem;">Change Shipping Address</h3>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 16px;">
+            Update primary delivery address from Springfield to a new residential address.
+          </p>
+          <button class="btn btn-outline btn-full imm-reauth-btn" data-action="Change Shipping Address">
+            🔒 Reauthenticate &amp; Update
+          </button>
+        </div>
+
+        <!-- Action 3 -->
+        <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; background: #fafbfc;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 1.6rem;">🔑</span>
+            <h3 style="margin: 0; font-size: 1.08rem;">Register New Passkey</h3>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 16px;">
+            Add a new hardware security key or passkey to account <strong>elisa.beckett@gmail.com</strong>.
+          </p>
+          <button class="btn btn-outline btn-full imm-reauth-btn" data-action="Register New Passkey">
+            🔒 Reauthenticate to Continue
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Reauth Output Log -->
+      <div id="imm-reauth-log" style="display: none; padding: 18px; border-radius: 10px; background: #f8f9fa; border: 1px solid var(--border-color);"></div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 Reauthentication Code Pattern (How it works)</h4>
+      <pre><code>// 1. User clicks a sensitive action link/button (e.g., Change Address, Authorize Payment)
+changeAddressButton.addEventListener('click', async () => {
+  try {
+    // 2. Invoke Immediate UI mode to reauthenticate the signed-in user in-place
+    const cred = await navigator.credentials.get({
+      password: true,
+      publicKey: { challenge: stepUpChallenge, rpId: 'example.com' },
+      uiMode: 'immediate'
+    });
+    // 3. Reauth verified! Perform sensitive operation immediately.
+    await executeSensitiveAction(cred);
+  } catch (error) {
+    if (error.name === 'NotAllowedError') {
+      // 4. User cancelled or step-up failed: show standard reauth modal
+      showStepUpAuthModal();
+    }
+  }
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/reauth.html');
+
+    const logEl = document.getElementById('imm-reauth-log');
+
+    document.querySelectorAll('.imm-reauth-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const target = e.currentTarget;
+        const actionName = target.getAttribute('data-action') || 'Sensitive Action';
+
+        if (logEl) {
+          logEl.style.display = 'block';
+          logEl.style.background = '#e8f0fe';
+          logEl.style.border = '1px solid #1a73e8';
+          logEl.style.color = '#1a73e8';
+          logEl.innerHTML = `🔄 Requesting step-up reauthentication for "<strong>${actionName}</strong>" via Immediate UI mode...`;
+        }
+
+        await runImmediateAuth({
+          scenarioName: `Reauthentication (${actionName})`,
+          onSignIn: (user) => {
+            if (logEl) {
+              logEl.style.background = '#e6f4ea';
+              logEl.style.border = '1px solid #137333';
+              logEl.style.color = '#137333';
+              logEl.innerHTML = `
+                <div style="font-size: 1.15rem; font-weight: 700;">
+                  🎉 Step-Up Reauthentication Verified!
+                </div>
+                <p style="margin: 6px 0 0 0; color: #202124;">
+                  <strong>"${actionName}"</strong> completed successfully for <strong>${user.username}</strong> without detouring to a separate reauthentication page.
+                </p>
+              `;
+            }
+            toast(`"${actionName}" authorized successfully!`);
+          },
+          onFallback: (error) => {
+            renderNotAllowedFallback({
+              containerId: 'imm-reauth-log',
+              scenarioName: `Reauthentication (${actionName})`,
+              error,
+              onRetry: () => btn.click(),
+            });
+          },
+        });
+      });
+    });
+  </script>
+</body>
+</html>

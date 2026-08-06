@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gated Content Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Gated Content &amp; Instant Resource Download &mdash; New Use Case</h2>
+          <p>
+            Demonstrating one-click authentication to unlock protected PDFs, reports, and premium articles
+          </p>
+        </div>
+        <div>
+          <span class="imm-tag new">Discovered Use Case</span>
+        </div>
+      </div>
+
+      <!-- Instructions / Benefits Alert -->
+      <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #1a3a5f;">
+        <strong>Why this use case increases conversion:</strong> B2B sites and research libraries lose up to 50% of visitors when presenting a multi-field sign-up wall to download a PDF. Immediate UI mode authenticates returning users in one click and immediately triggers the download!
+      </div>
+
+      <!-- Resource Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px;">
+        <!-- Resource 1 -->
+        <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; background: #fafbfc; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <span style="font-size: 1.8rem;">📄</span>
+              <div>
+                <h3 style="margin: 0; font-size: 1.08rem;">Chrome Identity 2026 Whitepaper</h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">PDF • 4.2 MB • Protected</span>
+              </div>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 18px;">
+              Comprehensive architectural guide to WebAuthn, FedCM, and Immediate UI mode integration patterns.
+            </p>
+          </div>
+          <button class="btn btn-primary btn-full imm-download-btn" data-doc="Chrome Identity 2026 Whitepaper">
+            📥 One-Click Unlock &amp; Download PDF
+          </button>
+        </div>
+
+        <!-- Resource 2 -->
+        <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; background: #fafbfc; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <span style="font-size: 1.8rem;">📊</span>
+              <div>
+                <h3 style="margin: 0; font-size: 1.08rem;">State of Passkeys 2026 Research Report</h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">PDF • 11.5 MB • Enterprise</span>
+              </div>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 18px;">
+              Empirical study of e-commerce checkout conversion gains and biometric sign-in adoption rates across devices.
+            </p>
+          </div>
+          <button class="btn btn-outline btn-full imm-download-btn" data-doc="State of Passkeys 2026 Research Report">
+            📥 One-Click Unlock &amp; Download Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Download Output Log -->
+      <div id="imm-gated-log" style="display: none; padding: 18px; border-radius: 10px; background: #f8f9fa; border: 1px solid var(--border-color);"></div>
+    </section>
+
+    <!-- Developer Implementation Guide Card -->
+    <div class="imm-code-panel">
+      <h4>💻 Gated Content Code Pattern (How it works)</h4>
+      <pre><code>// 1. User clicks "One-Click Unlock & Download" on a protected PDF or report
+downloadButton.addEventListener('click', async () => {
+  try {
+    // 2. Immediate UI mode checks local credentials & prompts account picker
+    const cred = await navigator.credentials.get({
+      password: true,
+      publicKey: { challenge: docChallenge, rpId: 'example.com' },
+      uiMode: 'immediate'
+    });
+    // 3. Authenticated! Trigger the file download immediately.
+    startResourceDownload(docId, cred);
+  } catch (error) {
+    if (error.name === 'NotAllowedError') {
+      // 4. Fallback: reveal inline lead-capture form
+      showInlineLeadCaptureForm(docId);
+    }
+  }
+});</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, renderNotAllowedFallback, toast } from '/static/js/app.js';
+
+    initImmediateShowcase('/gated.html');
+
+    const logEl = document.getElementById('imm-gated-log');
+
+    document.querySelectorAll('.imm-download-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const target = e.currentTarget;
+        const docName = target.getAttribute('data-doc') || 'Whitepaper';
+
+        if (logEl) {
+          logEl.style.display = 'block';
+          logEl.style.background = '#e8f0fe';
+          logEl.style.border = '1px solid #1a73e8';
+          logEl.style.color = '#1a73e8';
+          logEl.innerHTML = `🔄 Authenticating via Immediate UI mode to unlock "<strong>${docName}</strong>"...`;
+        }
+
+        await runImmediateAuth({
+          scenarioName: `Gated Download (${docName})`,
+          onSignIn: (user) => {
+            if (logEl) {
+              logEl.style.background = '#e6f4ea';
+              logEl.style.border = '1px solid #137333';
+              logEl.style.color = '#137333';
+              logEl.innerHTML = `
+                <div style="font-size: 1.15rem; font-weight: 700;">
+                  🎉 Resource Unlocked &amp; Downloading!
+                </div>
+                <p style="margin: 6px 0 0 0; color: #202124;">
+                  <strong>"${docName}"</strong> unlocked for <strong>${user.username}</strong> (${user.email}). No lead form or sign-up wall required!
+                </p>
+              `;
+            }
+            toast(`Downloading "${docName}"!`);
+          },
+          onFallback: (error) => {
+            renderNotAllowedFallback({
+              containerId: 'imm-gated-log',
+              scenarioName: `Gated Download (${docName})`,
+              error,
+              onRetry: () => btn.click(),
+            });
+          },
+        });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
