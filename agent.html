@@ -3,221 +3,117 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Agentic Travel Demo | Immediate UI Mode Showcase</title>
+  <title>ApexAir WebMCP Travel Portal | Immediate UI Mode Showcase</title>
   <link rel="stylesheet" href="static/css/style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
-    /* Agent & Travel Portal Layout */
-    .agent-demo-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 24px;
+    /* Full Travel Website Layout */
+    .travel-portal-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
       margin-bottom: 24px;
     }
 
-    @media (max-width: 860px) {
-      .agent-demo-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Gemini in Chrome Side Panel Styling */
-    .chat-panel {
-      background: #ffffff;
-      border: 1px solid #d2e3fc;
-      border-radius: var(--radius-lg);
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-      box-shadow: 0 4px 20px rgba(66, 133, 244, 0.08);
-      overflow: hidden;
-    }
-
-    .chat-header {
-      padding: 16px 20px;
-      background: linear-gradient(135deg, #f8fafd 0%, #eef4ff 100%);
-      border-bottom: 1px solid #d2e3fc;
+    .portal-nav {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 16px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .gemini-sparkle-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #4285f4 0%, #9b72cb 50%, #d96570 100%);
-      color: #fff;
+    .portal-logo {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
+      gap: 10px;
       font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
     }
 
-    .chat-body {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
+    .webmcp-indicator-pill {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #38bdf8;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Gemini AutoBrowse Assistant Floating Controller */
+    .autobrowse-controller {
+      background: linear-gradient(135deg, #eef4ff 0%, #f5f3ff 100%);
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius-md);
+      padding: 16px 22px;
+      margin: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 14px;
     }
 
-    .agent-msg {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      max-width: 90%;
+    /* Booking Wizard Steps */
+    .booking-content {
+      padding: 24px 28px 36px 28px;
     }
 
-    .agent-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4285f4 0%, #9b72cb 100%);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-
-    .agent-bubble {
-      background: #f8fafd;
-      border: 1px solid #d2e3fc;
-      color: #1f1f1f;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
-
-    .user-msg {
-      align-self: flex-end;
-      background: #1a73e8;
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 14px;
-      max-width: 85%;
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .agent-tool-call {
-      background: #eef4ff;
-      border: 1px solid #c2e7ff;
-      color: #0b57d0;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
-      font-family: monospace;
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Prompt Chips */
-    .chip-bar {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 8px 16px;
-      background: #f8fafd;
-      border-top: 1px solid #d2e3fc;
-    }
-
-    .prompt-chip {
-      background: #ffffff;
-      border: 1px solid #c2e7ff;
-      border-radius: var(--radius-pill);
-      padding: 6px 12px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #0b57d0;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-
-    .prompt-chip:hover {
-      background: #e8f0fe;
-      border-color: #1a73e8;
-    }
-
-    .chat-footer {
-      padding: 12px 16px;
-      background: var(--surface);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      gap: 8px;
-    }
-
-    /* Right Itinerary Panel */
-    .itinerary-panel {
-      background: var(--surface);
+    .search-bar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) 120px;
+      gap: 12px;
+      background: var(--surface-subtle);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 600px;
-      overflow-y: auto;
-    }
-
-    .flight-card {
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
       padding: 18px;
-      background: #fafbfc;
-      margin-bottom: 16px;
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
     }
 
-    .flight-route {
+    .flight-result-row {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      background: #ffffff;
+      margin-bottom: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
-      font-weight: 800;
+      flex-wrap: wrap;
+      gap: 16px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .flight-time {
-      font-size: 1.3rem;
-      color: var(--text-main);
-    }
-
-    .flight-city {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    /* Biometric Authorization Box */
-    .hitl-auth-box {
-      border: 2px dashed #1a73e8;
-      background: #e8f0fe;
-      border-radius: var(--radius-md);
-      padding: 20px;
-      text-align: center;
-      margin-top: auto;
-    }
-
-    .hitl-auth-box.active {
-      border-style: solid;
+    .flight-result-row.selected {
       border-color: #1a73e8;
-      box-shadow: 0 0 20px rgba(26, 115, 232, 0.2);
+      background: #f8fafd;
+      box-shadow: 0 0 0 1px #1a73e8;
     }
 
-    /* Confirmed Boarding Pass */
-    .boarding-pass {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    /* Checkout Card */
+    .checkout-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: #fafbfc;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    /* Boarding Pass Confirmation */
+    .ticket-confirmation {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #fff;
       border-radius: var(--radius-md);
-      padding: 24px;
+      padding: 28px;
+      margin-top: 24px;
       box-shadow: var(--shadow-md);
     }
   </style>
@@ -229,86 +125,170 @@
     <section class="imm-demo-container">
       <div class="imm-demo-header">
         <div>
-          <h2>Gemini in Chrome (Side Panel) &amp; WebMCP &mdash; Biometric Gate</h2>
+          <h2>WebMCP Travel Portal &mdash; Gemini in Chrome AutoBrowse &amp; Passkey Gate</h2>
           <p>
-            Demonstrating how <strong>Gemini in Chrome (Side Panel Agent)</strong> discovers webpage WebMCP tools to assemble travel bookings, using <strong>WebAuthn Immediate UI (<code>uiMode: 'immediate'</code>)</strong> as the 1-second biometric authorization checkpoint.
+            Demonstrating a real WebMCP-enabled travel portal where <strong>Gemini in Chrome (Side Panel)</strong> navigates, searches, and prepares bookings, triggering <strong>WebAuthn Immediate UI (<code>uiMode: 'immediate'</code>)</strong> for the final 1-second human authorization.
           </p>
         </div>
         <div>
-          <span class="imm-tag new" style="background: #e8f0fe; color: #1a73e8;">Gemini Side Panel + WebMCP</span>
+          <span class="imm-tag new" style="background: #e8f0fe; color: #1a73e8;">WebMCP Protocol + Passkeys</span>
         </div>
       </div>
 
       <!-- Architecture Alert -->
       <div style="background: #eef4ff; border-left: 4px solid #1a73e8; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #0b57d0; font-size: 0.92rem; line-height: 1.5;">
-        <strong>How the Side Panel + WebMCP Architecture Works:</strong> The user gives a travel prompt to <strong>Gemini in Chrome (Side Panel)</strong>. Gemini calls the webpage's WebMCP tools (<code>search_flights</code>, <code>select_seats</code>, <code>prepare_checkout</code>) to build the itinerary in the DOM. When Gemini issues the final booking call, the site triggers <strong>Immediate UI</strong> to prompt the human's fingerprint for a 1-second cryptographic authorization—with zero passwords or API keys shared!
+        <strong>How This Works with Gemini in Chrome (Side Panel):</strong> This travel site exposes standard <strong>WebMCP tools</strong> (`window.__webmcp`). When a user asks Gemini in Chrome to book a flight, Gemini's AutoBrowse agent invokes the webpage's tools to search, select, and fill passenger details. When it clicks <strong>Confirm &amp; Book</strong>, Immediate UI mode presents the native biometric prompt to the human to authorize payment—with zero password sharing!
       </div>
 
-      <!-- Agent + Travel Portal Grid -->
-      <div class="agent-demo-grid">
-        <!-- Left: Gemini in Chrome Side Panel Simulation -->
-        <div class="chat-panel">
-          <div class="chat-header">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div class="gemini-sparkle-logo">✨</div>
-              <div>
-                <div style="font-weight: 800; font-size: 0.95rem; color: #1f1f1f;">Gemini in Chrome (Side Panel)</div>
-                <div id="engine-status" style="font-size: 0.75rem; color: #1a73e8; font-weight: 600;">🔗 Connected to ApexAir WebMCP Tools</div>
-              </div>
-            </div>
-            <button id="reset-chat-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 8px;">Reset</button>
+      <!-- Main Travel Website Wrapper -->
+      <div class="travel-portal-wrapper">
+        <!-- Portal Nav -->
+        <div class="portal-nav">
+          <div class="portal-logo">
+            <span style="font-size: 1.5rem;">✈️</span>
+            <span>ApexAir Global</span>
           </div>
-
-          <div id="chat-stream" class="chat-body">
-            <div class="agent-msg">
-              <div class="agent-avatar">✨</div>
-              <div class="agent-bubble">
-                Hi! I'm <strong>Gemini in Chrome</strong>. I've connected to this webpage's WebMCP travel tools. Ask me to find a flight or hotel, and I'll assemble the itinerary and request your 1-tap passkey confirmation!
-              </div>
-            </div>
-          </div>
-
-          <!-- Prompt Suggestions -->
-          <div class="chip-bar">
-            <button class="prompt-chip" data-prompt="✈️ Book morning nonstop flight from NYC (JFK) to San Francisco (SFO) under $400">✈️ JFK &rarr; SFO ($389)</button>
-            <button class="prompt-chip" data-prompt="✈️ Book evening flight from London (LHR) to Tokyo (HND) with aisle seat">✈️ LHR &rarr; HND ($740)</button>
-            <button class="prompt-chip" data-prompt="🏨 Reserve 4-star boutique hotel in Paris near Eiffel Tower for 2 nights">🏨 Paris Hotel ($220/nt)</button>
-          </div>
-
-          <div class="chat-footer">
-            <input id="agent-input" type="text" placeholder="Ask Gemini Side Panel to book a flight..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-pill); font-size: 0.9rem;">
-            <button id="agent-send-btn" class="btn btn-primary" style="border-radius: var(--radius-pill); padding: 10px 18px; font-weight: 700; background: #1a73e8;">Ask Gemini</button>
+          <div class="webmcp-indicator-pill">
+            <span>✨ WebMCP Tools Registered:</span>
+            <code style="color: #38bdf8;">search_flights, select_seat, book_ticket</code>
           </div>
         </div>
 
-        <!-- Right: Live Itinerary & Biometric Authorization Gate -->
-        <div class="itinerary-panel">
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">📋 Itinerary &amp; Payment Desk</h3>
-              <span id="itinerary-status-badge" style="background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 700;">Awaiting Request</span>
+        <!-- Gemini in Chrome AutoBrowse Controller (Simulation of Side Panel Action) -->
+        <div class="autobrowse-controller">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #4285f4 0%, #9b72cb 50%, #d96570 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800;">✨</div>
+            <div>
+              <div style="font-weight: 800; font-size: 0.95rem; color: #1e1b4b;">Gemini in Chrome (Side Panel AutoBrowse)</div>
+              <div id="autobrowse-status" style="font-size: 0.82rem; color: #4338ca;">Ready to autonomously execute WebMCP travel tools on this site.</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="run-autobrowse-btn" class="btn btn-primary" style="background: #1a73e8; border-color: #1a73e8; font-weight: 700; font-size: 0.88rem; padding: 10px 18px; border-radius: var(--radius-pill);">
+              ✨ Simulate Gemini AutoBrowse &rarr;
+            </button>
+            <button id="reset-portal-btn" class="btn btn-outline" style="font-size: 0.84rem; padding: 10px 14px; border-radius: var(--radius-pill);">Reset</button>
+          </div>
+        </div>
+
+        <!-- Portal Booking Body -->
+        <div class="booking-content">
+          <!-- Search Form -->
+          <h3 style="margin: 0 0 14px 0; font-size: 1.15rem; font-weight: 800;">Search Flights</h3>
+          <div class="search-bar-grid">
+            <div>
+              <label style="display: block; font-size: 0.76rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">From</label>
+              <input id="input-origin" type="text" value="New York (JFK)" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.76rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">To</label>
+              <input id="input-dest" type="text" value="San Francisco (SFO)" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.76rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Date</label>
+              <input id="input-date" type="text" value="Tomorrow (Morning)" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.76rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Passenger</label>
+              <input id="input-passenger" type="text" value="Elisa Beckett" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem;">
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+              <button id="manual-search-btn" class="btn btn-primary btn-full" style="padding: 9px; font-weight: 700;">Search</button>
+            </div>
+          </div>
+
+          <!-- Flight Results List -->
+          <div id="flight-results-section">
+            <h4 style="margin: 0 0 14px 0; font-size: 1rem; font-weight: 800;">Available Nonstop Flights (JFK &rarr; SFO)</h4>
+            
+            <div id="flight-card-1" class="flight-result-row selected">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <span style="font-size: 1.5rem;">✈️</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 1.05rem;">08:30 AM &rarr; 11:45 AM</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">ApexAir AA-482 &bull; Boeing 787-9 &bull; 5h 15m Nonstop</div>
+                </div>
+              </div>
+              <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
+                <div>
+                  <div style="font-weight: 800; font-size: 1.25rem; color: #16a34a;">$389.00</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Main Cabin (Seat 12C Aisle)</div>
+                </div>
+                <button class="btn btn-primary select-flight-btn" data-flight="AA-482" data-price="$389.00" style="padding: 8px 16px; font-size: 0.85rem;">Selected</button>
+              </div>
             </div>
 
-            <!-- Prepared Itinerary Display -->
-            <div id="itinerary-details">
-              <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                <div style="font-size: 2.4rem; margin-bottom: 10px;">🗺️</div>
-                <p style="font-size: 0.92rem; margin: 0;">Tell AeroBot where you want to travel.<br>The AI will construct the booking itinerary here.</p>
+            <div id="flight-card-2" class="flight-result-row">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <span style="font-size: 1.5rem;">✈️</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 1.05rem;">01:15 PM &rarr; 04:30 PM</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">ApexAir AA-109 &bull; Airbus A321neo &bull; 5h 15m Nonstop</div>
+                </div>
+              </div>
+              <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
+                <div>
+                  <div style="font-weight: 800; font-size: 1.25rem; color: #16a34a;">$445.00</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Main Cabin (Seat 18F Window)</div>
+                </div>
+                <button class="btn btn-outline select-flight-btn" data-flight="AA-109" data-price="$445.00" style="padding: 8px 16px; font-size: 0.85rem;">Select Flight</button>
               </div>
             </div>
           </div>
 
-          <!-- Human-In-The-Loop Biometric Authorization Box -->
-          <div id="hitl-box" class="hitl-auth-box" style="display: none;">
-            <div style="font-size: 1.5rem; margin-bottom: 6px;">🔒</div>
-            <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800; color: #581c87;">Human-in-the-Loop Biometric Gate</h4>
-            <p style="font-size: 0.84rem; color: #6b21a8; margin: 0 0 14px 0; line-height: 1.45;">
-              AeroBot has assembled your itinerary. Touch your passkey (Touch ID / Face ID) to cryptographically authorize payment:
-            </p>
-            <button id="hitl-auth-btn" class="btn btn-primary btn-full" style="background: #7c3aed; border-color: #6d28d9; font-weight: 700; font-size: 0.95rem; padding: 12px;">
-              ⚡ Authorize AI Booking ($389.00) with Passkey
-            </button>
-            <div id="hitl-fallback" style="display: none; margin-top: 10px; font-size: 0.82rem; color: #b91c1c;"></div>
+          <!-- Checkout & Immediate UI Gate -->
+          <div id="checkout-section" class="checkout-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 800;">Final Review &amp; Payment</h4>
+                <div style="font-size: 0.82rem; color: var(--text-muted);">Passenger: <strong>Elisa Beckett</strong> &bull; Flight: <strong id="summary-flight">ApexAir AA-482</strong></div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Total Fare</div>
+                <div id="summary-total" style="font-size: 1.35rem; font-weight: 800; color: #16a34a;">$389.00</div>
+              </div>
+            </div>
+
+            <!-- The Core Intent Action Button -->
+            <div style="display: flex; flex-direction: column; gap: 10px; max-width: 440px;">
+              <button id="imm-book-flight-btn" class="btn btn-primary btn-full" style="padding: 14px 20px; font-size: 1.05rem; font-weight: 700; border-radius: var(--radius-md); background: #0f172a; border-color: #0f172a; box-shadow: 0 4px 16px rgba(15,23,42,0.25);">
+                ✈️ Confirm &amp; Book Flight ($389.00)
+              </button>
+              <span style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">
+                🔒 Protected by WebAuthn Immediate UI (FIDO2 Hardware Biometrics)
+              </span>
+            </div>
+
+            <div id="passkey-feedback" style="display: none; margin-top: 16px; background: #fff9e6; border: 1px solid #ffd54f; border-radius: 8px; padding: 12px; font-size: 0.85rem; color: #5d4037; max-width: 440px;"></div>
+          </div>
+
+          <!-- Confirmed Ticket Display -->
+          <div id="confirmed-ticket-section" class="ticket-confirmation" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px dashed #475569; padding-bottom: 12px;">
+              <span style="font-weight: 800; font-size: 1.2rem; color: #38bdf8;">✈️ APEXAIR CONFIRMED BOARDING PASS</span>
+              <span id="ticket-booking-id" style="font-size: 0.85rem; color: #94a3b8; font-family: monospace;">VOY-884921</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 16px;">
+              <div>
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Passenger</div>
+                <div id="ticket-passenger" style="font-weight: 800; font-size: 1.05rem;">Elisa Beckett</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Flight / Seat</div>
+                <div style="font-weight: 800; font-size: 1.05rem; color: #38bdf8;">AA-482 &bull; 12C (Aisle)</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Route</div>
+                <div style="font-weight: 800; font-size: 1.05rem;">JFK &rarr; SFO</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Payment Verification</div>
+                <div style="font-weight: 800; font-size: 0.95rem; color: #4ade80;">🔒 FIDO2 Passkey Signed</div>
+              </div>
+            </div>
+            <div style="background: #020617; border-radius: 6px; padding: 10px; text-align: center; font-size: 0.75rem; color: #94a3b8; font-family: monospace; letter-spacing: 0.1em;">
+              |||| || |||||||| ||| |||| || ||||||||| |||||| |||| |||||||| |||
+            </div>
           </div>
         </div>
       </div>
@@ -320,8 +300,8 @@
             <span class="imm-console-title">🖥️ WebMCP &amp; Immediate UI Execution Console</span>
             <button id="clear-logs-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 3px 8px;">Clear</button>
           </div>
-          <div id="agent-console" class="imm-console">
-            <div class="imm-log-entry info">[System] AI Travel Concierge initialized. Ready to test autonomous WebMCP + Immediate UI delegation.</div>
+          <div id="portal-console" class="imm-console">
+            <div class="imm-log-entry info">[WebMCP Server] ApexAir portal initialized. WebMCP tools exposed: search_flights, select_flight, book_ticket.</div>
           </div>
         </div>
       </div>
@@ -333,7 +313,7 @@
 
     initImmediateShowcase(window.location.pathname);
 
-    const consoleEl = document.getElementById('agent-console');
+    const consoleEl = document.getElementById('portal-console');
     function log(msg, type = 'info') {
       if (!consoleEl) return;
       const entry = document.createElement('div');
@@ -347,174 +327,84 @@
       if (consoleEl) consoleEl.innerHTML = '';
     });
 
-    const chatStream = document.getElementById('chat-stream');
-    const agentInput = document.getElementById('agent-input');
-    const itineraryDetails = document.getElementById('itinerary-details');
-    const hitlBox = document.getElementById('hitl-box');
-    const statusBadge = document.getElementById('itinerary-status-badge');
-    const hitlAuthBtn = document.getElementById('hitl-auth-btn');
-    const fallbackEl = document.getElementById('hitl-fallback');
+    const autobrowseStatus = document.getElementById('autobrowse-status');
+    const checkoutSection = document.getElementById('checkout-section');
+    const ticketSection = document.getElementById('confirmed-ticket-section');
+    const feedbackEl = document.getElementById('passkey-feedback');
+    const bookBtn = document.getElementById('imm-book-flight-btn');
 
-    let currentBooking = null;
+    let currentSelectedPrice = '$389.00';
+    let currentSelectedFlight = 'ApexAir AA-482';
 
-    // WebMCP Protocol & Side Panel Connection
-    function initWebMCPBridge() {
-      const statusEl = document.getElementById('engine-status');
-      statusEl.textContent = '🔗 WebMCP Active • 4 Travel Tools Exposed';
-      log('WebMCP Protocol Initialized. Webpage registered 4 tools: search_flights, select_seats, prepare_checkout, request_biometric_auth', 'info');
-    }
-
-    initWebMCPBridge();
-
-    function addMessage(sender, text, isToolCall = false) {
-      if (sender === 'user') {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'user-msg';
-        msgDiv.textContent = text;
-        chatStream.appendChild(msgDiv);
-      } else {
-        const msgContainer = document.createElement('div');
-        msgContainer.className = 'agent-msg';
-        msgContainer.innerHTML = `
-          <div class="agent-avatar">✨</div>
-          <div class="agent-bubble">
-            ${text}
-            ${isToolCall ? `<div class="agent-tool-call">⚙️ WebMCP Tool Call: ${isToolCall}</div>` : ''}
-          </div>
-        `;
-        chatStream.appendChild(msgContainer);
+    // 1. Expose standard WebMCP Tools on window object for Gemini in Chrome Side Panel
+    window.__webmcp = {
+      manifest: {
+        name: 'ApexAir WebMCP Travel Tools',
+        version: '1.0.0',
+        tools: [
+          {
+            name: 'search_flights',
+            description: 'Searches live nonstop flights between origin and destination airport',
+            parameters: { origin: 'string', destination: 'string', date: 'string' }
+          },
+          {
+            name: 'select_flight',
+            description: 'Selects an available flight and seat tier',
+            parameters: { flightNumber: 'string' }
+          },
+          {
+            name: 'book_ticket',
+            description: 'Triggers the final ticket booking and invokes WebAuthn Immediate UI biometric authorization',
+            parameters: { passengerName: 'string', totalAmount: 'string' }
+          }
+        ]
+      },
+      callTool: async (toolName, args) => {
+        log(`[WebMCP Server] Received tool call from Gemini Side Panel: ${toolName}(${JSON.stringify(args)})`, 'info');
+        if (toolName === 'search_flights') {
+          document.getElementById('input-origin').value = args.origin || 'New York (JFK)';
+          document.getElementById('input-dest').value = args.destination || 'San Francisco (SFO)';
+          log(`[WebMCP] Updated DOM search fields: ${args.origin} -> ${args.destination}`, 'success');
+          return { status: 'success', flightsFound: 2 };
+        }
+        if (toolName === 'select_flight') {
+          document.getElementById('flight-card-1').classList.add('selected');
+          document.getElementById('flight-card-2').classList.remove('selected');
+          log(`[WebMCP] Selected flight ${args.flightNumber}`, 'success');
+          return { status: 'success', selected: args.flightNumber };
+        }
+        if (toolName === 'book_ticket') {
+          log('[WebMCP] Invoking client WebAuthn Immediate UI for biometric payment authorization...', 'info');
+          await triggerImmediateBooking();
+          return { status: 'invoked_biometric_gate' };
+        }
       }
-      chatStream.scrollTop = chatStream.scrollHeight;
-    }
+    };
 
-    // Process Travel Request from Gemini Side Panel
-    async function handleUserPrompt(promptText) {
-      if (!promptText.trim()) return;
-      addMessage('user', promptText);
-      agentInput.value = '';
-
-      log(`[Gemini in Chrome] Side Panel received prompt: "${promptText}"`, 'info');
-
-      // Step 1: Gemini calls WebMCP search_flights tool on webpage
-      setTimeout(() => {
-        addMessage('agent', 'Connecting to ApexAir WebMCP endpoint to query flight routes and live pricing...', 'webmcp/callTool("search_flights", { origin: "JFK", dest: "SFO", max_price: 400 })');
-        log('WebMCP Request -> tools/call: search_flights(origin="JFK", destination="SFO")', 'info');
-        log('WebMCP Response <- Found 12 matching flights. Best match: ApexAir AA-482 ($389.00).', 'info');
-      }, 700);
-
-      // Step 2: Gemini calls WebMCP prepare_checkout tool to populate DOM
-      setTimeout(() => {
-        currentBooking = {
-          flight: 'ApexAir Flight AA-482 (Boeing 787-9 Dreamliner)',
-          origin: 'New York (JFK)',
-          dest: 'San Francisco (SFO)',
-          depart: '08:30 AM',
-          arrive: '11:45 AM (Nonstop)',
-          seat: '12C (Aisle, Extra Legroom)',
-          passenger: 'Elisa Beckett (Passkey Member)',
-          price: '$389.00'
-        };
-
-        addMessage('agent', `I've selected nonstop <strong>ApexAir Flight AA-482</strong> with Aisle seat 12C for <strong>$389.00</strong>. I've populated the booking details on the page.<br><br>Please confirm your payment using your 1-tap passkey!`, 'webmcp/callTool("prepare_checkout", { flightId: "AA-482", total: 389.00 })');
-        log('WebMCP Request -> tools/call: prepare_checkout(flight="AA-482", price=389.00)', 'success');
-
-        renderItinerary(currentBooking);
-      }, 1600);
-    }
-
-    function renderItinerary(booking) {
-      if (statusBadge) {
-        statusBadge.style.background = '#fef3c7';
-        statusBadge.style.color = '#92400e';
-        statusBadge.textContent = '⏳ Awaiting Biometric Auth';
-      }
-
-      itineraryDetails.innerHTML = `
-        <div class="flight-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-size: 0.78rem; font-weight: 700; color: #7c3aed; text-transform: uppercase;">✈️ Selected Flight</span>
-            <span style="font-weight: 800; color: #16a34a; font-size: 1.15rem;">${booking.price}</span>
-          </div>
-          <div class="flight-route">
-            <div>
-              <div class="flight-time">${booking.depart}</div>
-              <div class="flight-city">${booking.origin}</div>
-            </div>
-            <div style="color: var(--text-muted); font-size: 0.8rem; text-align: center;">
-              &mdash;&mdash; 5h 15m &mdash;&rarr;<br>Nonstop
-            </div>
-            <div>
-              <div class="flight-time">${booking.arrive}</div>
-              <div class="flight-city">${booking.dest}</div>
-            </div>
-          </div>
-          <div style="font-size: 0.84rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px; display: flex; justify-content: space-between;">
-            <span>💺 Seat: <strong>${booking.seat}</strong></span>
-            <span>👤 Passenger: <strong>${booking.passenger}</strong></span>
-          </div>
-        </div>
-      `;
-
-      if (hitlBox) {
-        hitlBox.style.display = 'block';
-        hitlBox.classList.add('active');
-        hitlAuthBtn.textContent = `⚡ Authorize AI Booking (${booking.price}) with Passkey`;
-      }
-    }
-
-    // Human-in-the-Loop Immediate UI Biometric Auth Execution
-    async function executeBiometricAuth() {
-      if (!currentBooking) return;
-      log('Human clicked Authorize. Invoking WebAuthn Immediate UI (uiMode: "immediate")...', 'info');
-      if (fallbackEl) fallbackEl.style.display = 'none';
+    // 2. Perform Immediate UI Booking Execution
+    async function triggerImmediateBooking() {
+      log('Executing runImmediateAuth with uiMode: "immediate"...', 'info');
+      if (feedbackEl) feedbackEl.style.display = 'none';
 
       const handleAuthSuccess = (user) => {
-        log(`🎉 FIDO2 Hardware Assertion Verified! Authorized by: ${user.username} (${user.email})`, 'success');
-        log('WebMCP Agent received cryptographic confirmation token. Finalizing ticket issuance...', 'success');
-        toast(`✨ Biometric Authorization Confirmed for ${user.username}!`);
+        const displayName = user.username || 'Elisa Beckett';
+        log(`🎉 FIDO2 Hardware Assertion Verified! Authorized by: ${displayName} (${user.email || 'elisa.beckett@demogmail.com'})`, 'success');
+        log('WebMCP Agent received cryptographic confirmation. Issuing boarding pass...', 'success');
+        toast(`✨ Flight Confirmed for ${displayName}!`);
 
-        // Update UI to Confirmed Boarding Pass
-        if (hitlBox) hitlBox.style.display = 'none';
-        if (statusBadge) {
-          statusBadge.style.background = '#dcfce7';
-          statusBadge.style.color = '#166534';
-          statusBadge.textContent = '✅ Ticket Issued';
+        // Hide checkout form and display confirmed ticket
+        if (checkoutSection) checkoutSection.style.display = 'none';
+        if (ticketSection) {
+          ticketSection.style.display = 'block';
+          const bookingId = 'VOY-' + Math.floor(100000 + Math.random() * 900000);
+          document.getElementById('ticket-booking-id').textContent = bookingId;
+          document.getElementById('ticket-passenger').textContent = displayName;
         }
 
-        const bookingId = 'VOY-' + Math.floor(100000 + Math.random() * 900000);
-        itineraryDetails.innerHTML = `
-          <div class="boarding-pass">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px dashed #475569; padding-bottom: 10px;">
-              <span style="font-weight: 800; font-size: 1.1rem; color: #a78bfa;">APEXAIR BOARDING PASS</span>
-              <span style="font-size: 0.8rem; color: #94a3b8;">${bookingId}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-              <div>
-                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Passenger</div>
-                <div style="font-weight: 800; font-size: 1.05rem;">${user.username || 'Elisa Beckett'}</div>
-              </div>
-              <div style="text-align: right;">
-                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Seat</div>
-                <div style="font-weight: 800; font-size: 1.05rem; color: #38bdf8;">12C (Aisle)</div>
-              </div>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
-              <div>
-                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Route</div>
-                <div style="font-weight: 700;">JFK &rarr; SFO</div>
-              </div>
-              <div style="text-align: right;">
-                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Status</div>
-                <div style="color: #4ade80; font-weight: 700;">🔒 Hardware Verified</div>
-              </div>
-            </div>
-            <div style="background: #0f172a; border-radius: 6px; padding: 8px; text-align: center; font-size: 0.75rem; color: #94a3b8; font-family: monospace;">
-              ||| | ||||| |||| || |||||| | ||||| | |||||||| ||||
-            </div>
-          </div>
-        `;
-
-        addMessage('agent', `🎉 <strong>Booking Confirmed!</strong> I have finalized your ticket (Confirmation: <code>${bookingId}</code>). Your boarding pass is ready on the right! Total charged: <strong>${currentBooking.price}</strong>.`);
+        if (autobrowseStatus) {
+          autobrowseStatus.textContent = '✅ AutoBrowse Finished: Flight confirmed & ticket issued!';
+          autobrowseStatus.style.color = '#16a34a';
+        }
       };
 
       await runImmediateAuth({
@@ -526,60 +416,64 @@
           log(`Immediate UI fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
           toast('No passkey found on this device. Please create one or pay manually.');
 
-          if (fallbackEl) {
-            fallbackEl.style.display = 'block';
-            fallbackEl.innerHTML = `
-              <strong>⚠️ No Passkey Detected</strong><br>
-              <a href="register.html" class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px; margin-top: 6px; display: inline-block;">
-                ✨ Create Passkey (register.html)
-              </a>
+          if (feedbackEl) {
+            feedbackEl.style.display = 'block';
+            feedbackEl.innerHTML = `
+              <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey on this Device</div>
+              <div>Create a travel passkey in 5 seconds to unlock 1-tap booking:</div>
+              <div style="margin-top: 8px;">
+                <a href="register.html" class="btn btn-primary btn-full" style="font-size: 0.82rem; padding: 6px 10px; text-align: center;">
+                  ✨ Create Passkey (register.html) &rarr;
+                </a>
+              </div>
             `;
           }
         }
       });
     }
 
-    hitlAuthBtn?.addEventListener('click', executeBiometricAuth);
+    bookBtn?.addEventListener('click', triggerImmediateBooking);
 
-    // Prompt Chips and Send Events
-    document.querySelectorAll('.prompt-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const prompt = chip.getAttribute('data-prompt');
-        handleUserPrompt(prompt);
-      });
-    });
+    // 3. Simulate Gemini in Chrome AutoBrowse Agent Running WebMCP Tools
+    document.getElementById('run-autobrowse-btn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('run-autobrowse-btn');
+      btn.disabled = true;
+      btn.textContent = '🔄 Gemini AutoBrowsing...';
 
-    document.getElementById('agent-send-btn')?.addEventListener('click', () => {
-      handleUserPrompt(agentInput.value);
-    });
-
-    agentInput?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') handleUserPrompt(agentInput.value);
-    });
-
-    document.getElementById('reset-chat-btn')?.addEventListener('click', () => {
-      chatStream.innerHTML = `
-        <div class="agent-msg">
-          <div class="agent-avatar">✨</div>
-          <div class="agent-bubble">
-            Session reset. Tell Gemini what trip you'd like to book!
-          </div>
-        </div>
-      `;
-      itineraryDetails.innerHTML = `
-        <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-          <div style="font-size: 2.4rem; margin-bottom: 10px;">🗺️</div>
-          <p style="font-size: 0.92rem; margin: 0;">Ask Gemini in Chrome to find a flight.<br>The WebMCP tools will construct the booking itinerary here.</p>
-        </div>
-      `;
-      if (hitlBox) hitlBox.style.display = 'none';
-      if (statusBadge) {
-        statusBadge.style.background = '#e2e8f0';
-        statusBadge.style.color = '#475569';
-        statusBadge.textContent = 'Awaiting Request';
+      if (autobrowseStatus) {
+        autobrowseStatus.textContent = '🤖 Step 1/3: Gemini calling WebMCP search_flights(JFK -> SFO)...';
+        autobrowseStatus.style.color = '#1a73e8';
       }
-      currentBooking = null;
-      log('Travel session reset.', 'info');
+
+      await window.__webmcp.callTool('search_flights', { origin: 'New York (JFK)', destination: 'San Francisco (SFO)' });
+
+      setTimeout(async () => {
+        if (autobrowseStatus) {
+          autobrowseStatus.textContent = '🤖 Step 2/3: Gemini calling WebMCP select_flight(AA-482)...';
+        }
+        await window.__webmcp.callTool('select_flight', { flightNumber: 'AA-482' });
+
+        setTimeout(async () => {
+          if (autobrowseStatus) {
+            autobrowseStatus.textContent = '🤖 Step 3/3: Gemini calling WebMCP book_ticket() -> Prompting Passkey...';
+          }
+          btn.disabled = false;
+          btn.textContent = '✨ Simulate Gemini AutoBrowse &rarr;';
+          await window.__webmcp.callTool('book_ticket', { passengerName: 'Elisa Beckett', totalAmount: '$389.00' });
+        }, 1200);
+      }, 1000);
+    });
+
+    // Reset handler
+    document.getElementById('reset-portal-btn')?.addEventListener('click', () => {
+      if (checkoutSection) checkoutSection.style.display = 'block';
+      if (ticketSection) ticketSection.style.display = 'none';
+      if (feedbackEl) feedbackEl.style.display = 'none';
+      if (autobrowseStatus) {
+        autobrowseStatus.textContent = 'Ready to autonomously execute WebMCP travel tools on this site.';
+        autobrowseStatus.style.color = '#4338ca';
+      }
+      log('Travel portal reset to initial search state.', 'info');
     });
   </script>
 </body>
