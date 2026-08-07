@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll-Triggered Paywall Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* Editorial typography & Paywall styling */
+    .article-container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 40px 48px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .article-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .article-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand-accent);
+      background: var(--brand-accent-light);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 12px;
+    }
+
+    .article-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px 0;
+      color: var(--text-main);
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .author-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .article-body {
+      font-size: 1.12rem;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    .article-body p {
+      margin-bottom: 24px;
+    }
+
+    /* Paywall Gated Section */
+    .gated-content-wrapper {
+      position: relative;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gated-content-wrapper.locked .gated-paragraphs {
+      filter: blur(8px);
+      user-select: none;
+      pointer-events: none;
+      opacity: 0.45;
+      transition: filter 0.6s ease, opacity 0.6s ease;
+    }
+
+    .gated-content-wrapper.unlocked .gated-paragraphs {
+      filter: blur(0px);
+      user-select: auto;
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    /* Gradient overlay and paywall barrier card */
+    .paywall-overlay-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.98) 35%, #ffffff 100%);
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+      border: 1px solid var(--border-color);
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .gated-content-wrapper.unlocked .paywall-overlay-card {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      display: none;
+    }
+
+    /* Floating Reader Bar (Appears on Scroll) */
+    .floating-paywall-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: #111111;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      z-index: 1000;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    .floating-paywall-bar.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .floating-paywall-bar.hidden-unlocked {
+      transform: translateX(-50%) translateY(120px);
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Scroll-Triggered Paywall &mdash; Publisher Instant Unlock</h2>
+          <p>
+            Demonstrating in-place WebAuthn Immediate UI (<code>uiMode: 'immediate'</code>) when a reader scrolls into paywalled editorial content.
+          </p>
+        </div>
+        <div>
+          <span class="imm-tag new">New Use Case</span>
+        </div>
+      </div>
+
+      <!-- Context Alert -->
+      <div style="background: var(--brand-accent-light); border-left: 4px solid var(--brand-accent); padding: 14px 18px; border-radius: 4px; margin-bottom: 28px; color: #0033aa; font-size: 0.92rem; line-height: 1.5;">
+        <strong>How it works:</strong> Scroll down the article below. When you reach the paywall barrier, an <code>IntersectionObserver</code> triggers a floating <strong>1-Tap Passkey Unlock</strong> bar. Tapping it invokes Immediate UI, dissolves the CSS blur, and lets you continue reading uninterrupted without page reloads or losing your place!
+      </div>
+
+      <!-- Main Article Box -->
+      <article class="article-container">
+        <!-- Article Header -->
+        <header class="article-header">
+          <span class="article-tag">Deep Dive • Digital Identity</span>
+          <h1 class="article-title">Why Immediate UI Mode is the Missing Link for the Frictionless Web</h1>
+          <div class="article-meta">
+            <div class="author-avatar">YT</div>
+            <div>
+              <div style="font-weight: 700; color: var(--text-main);">Yu Tsuno &amp; Chrome Identity Team</div>
+              <div style="font-size: 0.8rem;">Published August 2026 • 6 min read • 🔒 Premium Article</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Article Body -->
+        <div class="article-body">
+          <p>
+            For the past three decades, the web has suffered from a fundamental tension between <strong>security</strong> and <strong>conversion</strong>. Every barrier placed in front of a user—whether it is a password input, an OTP verification code, or a full-page login redirect—acts as a point of friction where up to 70% of potential readers simply close the tab.
+          </p>
+
+          <p>
+            With the advent of Passkeys and WebAuthn, we achieved hardware-backed asymmetric cryptography. Yet, the traditional modal UI still forces jarring interruptions, and Conditional UI requires users to tap an active text field. Enter <strong>Immediate UI Mode</strong> (<code>uiMode: 'immediate'</code>), released as standard in Chrome 149.
+          </p>
+
+          <!-- Sentinel element for IntersectionObserver -->
+          <div id="paywall-sentinel" style="height: 1px; width: 100%;"></div>
+
+          <!-- Gated / Blurred Section -->
+          <div id="gated-section" class="gated-content-wrapper locked">
+            <!-- Overlay Paywall Card -->
+            <div id="paywall-card" class="paywall-overlay-card">
+              <div style="font-size: 2.2rem; margin-bottom: 8px;">✨</div>
+              <h3 style="margin: 0 0 8px 0; font-size: 1.35rem; font-weight: 800;">Subscriber Exclusive Article</h3>
+              <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 460px; margin: 0 0 20px 0; line-height: 1.5;">
+                You've reached the free preview limit. Unlock the remaining 4 minutes of technical analysis instantly with your passkey:
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px;">
+                <button id="imm-article-unlock-btn" class="btn btn-primary btn-full" style="font-weight: 700; font-size: 1rem; padding: 14px 20px;">
+                  ⚡ 1-Tap Unlock with Passkey
+                </button>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin: 6px 0;">&mdash; OR &mdash;</div>
+                <div id="fallback-subscribe-box" style="width: 100%;">
+                  <button id="guest-sub-toggle-btn" class="btn btn-outline btn-full" style="font-size: 0.85rem;">
+                    ✉️ Subscribe with Email ($1 / month)
+                  </button>
+                  <div id="guest-sub-form" style="display: none; margin-top: 12px; text-align: left; background: var(--surface-subtle); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;">Enter your email</label>
+                    <input id="sub-email" type="email" placeholder="you@example.com" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 8px;">
+                    <button id="sub-submit-btn" class="btn btn-primary btn-full" style="font-size: 0.85rem;">Continue with Email &rarr;</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="paywall-feedback-msg" style="display: none; margin-top: 16px; background: #fff9e6; border: 1px solid #ffd54f; border-radius: 8px; padding: 10px 14px; font-size: 0.84rem; color: #5d4037; text-align: left; max-width: 380px;"></div>
+            </div>
+
+            <!-- Gated Paragraphs (Blurred when locked) -->
+            <div class="gated-paragraphs">
+              <p>
+                <strong>Architectural Breakthrough: Speculative Intent Resolution</strong><br>
+                What makes Immediate UI revolutionary for media publishers is the concept of <em>Zero-State Disruption</em>. When an <code>IntersectionObserver</code> detects that a user has scrolled to the bottom of the visible preview, the publisher doesn't need to hijack the viewport.
+              </p>
+
+              <p>
+                Instead, a single tap immediately queries the device’s resident credentials. If the reader previously created a passkey with this publication on their phone or laptop, the native OS bottom-sheet appears in under 300 milliseconds. A quick biometric confirmation returns the hardware-backed assertion to the client script.
+              </p>
+
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 24px 0; font-family: monospace; font-size: 0.9rem; color: #1e293b;">
+                <strong>💡 Publisher Performance Metric:</strong><br>
+                Traditional Paywall Conversion: <strong>2.8%</strong><br>
+                Immediate UI 1-Tap Paywall Conversion: <strong>21.4%</strong> (7.6x improvement)
+              </div>
+
+              <p>
+                <strong>Conclusion: The Future of Media Monetization</strong><br>
+                By shifting authentication from a disruptive destination page to an ambient in-place capability, media platforms can finally offer frictionless micro-subscriptions, member-only discussions, and personalized content feeds without losing reader engagement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Floating Reader Bar -->
+      <div id="floating-bar" class="floating-paywall-bar">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.2rem;">🔒</span>
+          <div>
+            <div style="font-size: 0.88rem; font-weight: 700;">Subscriber Exclusive</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">4 min remaining in article</div>
+          </div>
+        </div>
+        <button id="floating-unlock-btn" class="btn btn-primary" style="background: #ffffff; color: #111111; font-weight: 700; font-size: 0.85rem; padding: 8px 16px; border-radius: var(--radius-pill);">
+          ⚡ 1-Tap Unlock
+        </button>
+      </div>
+
+      <!-- Interactive Logs Console -->
+      <div style="margin-top: 32px;">
+        <div class="imm-console-wrapper">
+          <div class="imm-console-header">
+            <span class="imm-console-title">🖥️ Scroll Paywall Execution Logs</span>
+            <button id="clear-logs-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 3px 8px;">Clear</button>
+          </div>
+          <div id="paywall-console" class="imm-console">
+            <div class="imm-log-entry info">[System] Scroll down the article to trigger the IntersectionObserver sentinel...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, toast } from './static/js/app.js';
+
+    initImmediateShowcase(window.location.pathname);
+
+    const consoleEl = document.getElementById('paywall-console');
+    function log(msg, type = 'info') {
+      if (!consoleEl) return;
+      const entry = document.createElement('div');
+      entry.className = `imm-log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      consoleEl.appendChild(entry);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    document.getElementById('clear-logs-btn')?.addEventListener('click', () => {
+      if (consoleEl) consoleEl.innerHTML = '';
+    });
+
+    const gatedSection = document.getElementById('gated-section');
+    const floatingBar = document.getElementById('floating-bar');
+    const paywallCard = document.getElementById('paywall-card');
+    const feedbackEl = document.getElementById('paywall-feedback-msg');
+    let isUnlocked = false;
+
+    // 1. IntersectionObserver for Scroll-Triggered UI
+    const sentinel = document.getElementById('paywall-sentinel');
+    if (sentinel && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!isUnlocked) {
+            if (entry.isIntersecting || entry.boundingClientRect.top < window.innerHeight) {
+              floatingBar?.classList.add('visible');
+              log('IntersectionObserver: User scrolled into paywall sentinel. Displaying floating unlock bar.', 'info');
+            } else {
+              floatingBar?.classList.remove('visible');
+            }
+          }
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(sentinel);
+    }
+
+    // 2. Perform Immediate UI Unlock
+    async function triggerArticleUnlock() {
+      if (isUnlocked) return;
+      log('User initiated 1-Tap Unlock. Invoking runImmediateAuth with uiMode: "immediate"...', 'info');
+
+      if (feedbackEl) feedbackEl.style.display = 'none';
+
+      await runImmediateAuth({
+        useImmediate: true,
+        reqPasskeys: true,
+        onSuccess: (user) => {
+          isUnlocked = true;
+          log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${user.username} (${user.email})`, 'success');
+          toast(`✨ Welcome back, ${user.username}! Full article unlocked.`);
+
+          // Smoothly unblur the article in place
+          gatedSection.classList.remove('locked');
+          gatedSection.classList.add('unlocked');
+          floatingBar?.classList.add('hidden-unlocked');
+
+          setTimeout(() => {
+            if (paywallCard) paywallCard.style.display = 'none';
+          }, 400);
+        },
+        onFallback: (reason, err) => {
+          log(`Immediate UI mode fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
+          toast('No passkey found on this device. Please register or subscribe.');
+
+          if (feedbackEl) {
+            feedbackEl.style.display = 'block';
+            feedbackEl.innerHTML = `
+              <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey on this Device</div>
+              <div>Create a passkey in 5 seconds to unlock 1-tap reading:</div>
+              <div style="margin-top: 8px;">
+                <a href="register.html" class="btn btn-primary btn-full" style="font-size: 0.82rem; padding: 6px 10px; text-align: center;">
+                  ✨ Create Passkey (register.html) &rarr;
+                </a>
+              </div>
+            `;
+          }
+        }
+      });
+    }
+
+    // Button event listeners
+    document.getElementById('imm-article-unlock-btn')?.addEventListener('click', triggerArticleUnlock);
+    document.getElementById('floating-unlock-btn')?.addEventListener('click', triggerArticleUnlock);
+
+    // Guest fallback subscribe toggle
+    const guestToggleBtn = document.getElementById('guest-sub-toggle-btn');
+    const guestForm = document.getElementById('guest-sub-form');
+    guestToggleBtn?.addEventListener('click', () => {
+      if (guestForm) {
+        guestForm.style.display = guestForm.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+
+    document.getElementById('sub-submit-btn')?.addEventListener('click', () => {
+      const email = document.getElementById('sub-email')?.value || 'reader@example.com';
+      toast(`✅ Subscription active for ${email}! Unlocking article.`);
+      isUnlocked = true;
+      gatedSection.classList.remove('locked');
+      gatedSection.classList.add('unlocked');
+      floatingBar?.classList.add('hidden-unlocked');
+      if (paywallCard) paywallCard.style.display = 'none';
+      log(`Guest email subscribed: ${email}. Article unlocked in-place.`, 'success');
+    });
+  </script>
+</body>
+</html>

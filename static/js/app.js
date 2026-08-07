@@ -26,6 +26,7 @@ const NAV_GROUPS = [
     items: [
       { href: 'community.html', label: '💬 Commenting' },
       { href: 'gated.html', label: '📄 Gated Content' },
+      { href: 'publisher.html', label: '📰 Scroll Paywall' },
       { href: 'switcher.html', label: '🔄 Account Switcher' },
     ],
   },

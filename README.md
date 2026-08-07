@@ -63,6 +63,8 @@ All 8 demo pages are accessible from the navigation bar:
    - Returning subscribers unlock whitepapers and research reports in 1 tap without multi-field lead capture forms.
 7. **🔄 Quick Multi-Account Switcher (`/switcher.html`)**:
    - Switch workspace profiles dynamically using Immediate UI account lists.
+8. **📰 Scroll-Triggered Publisher Paywall (`/publisher.html`)**:
+   - Readers scroll into paywalled articles and unlock them in-place with `IntersectionObserver` + 1-Tap passkey, preserving scroll position with zero redirects.
 
 ---
 
