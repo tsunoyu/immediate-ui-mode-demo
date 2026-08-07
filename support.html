@@ -182,13 +182,20 @@
               Identify your subscription in 1 tap to run a live optical laser telemetry test, check neighborhood node outages, and test your smart router:
             </p>
 
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-              <button id="imm-diagnose-btn" class="btn btn-primary" style="font-size: 1.05rem; padding: 14px 28px; font-weight: 700; border-radius: var(--radius-pill); box-shadow: 0 4px 14px rgba(0,85,255,0.25);">
-                ⚡ 1-Tap Identify &amp; Diagnose Line (Passkey)
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-bottom: 16px;">
+              <button id="imm-diag-action-btn" class="btn btn-primary" style="font-size: 1rem; padding: 14px 24px; font-weight: 700; border-radius: var(--radius-pill); box-shadow: 0 4px 14px rgba(0,85,255,0.25);">
+                🔧 Run Automatic Line Diagnostics
               </button>
-              <button id="support-fallback-toggle-btn" class="btn btn-outline" style="font-size: 0.84rem; padding: 6px 14px;">
-                🔑 Or look up by Phone Number / Account ID
+              <button id="imm-chat-action-btn" class="btn btn-outline" style="font-size: 1rem; padding: 14px 22px; font-weight: 700; border-radius: var(--radius-pill); border-color: var(--text-main);">
+                💬 Start Priority Support Chat
               </button>
+              <button id="imm-outage-action-btn" class="btn btn-outline" style="font-size: 1rem; padding: 14px 22px; font-weight: 700; border-radius: var(--radius-pill);">
+                🚨 Check Neighborhood Outages
+              </button>
+            </div>
+
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+              ✨ Automatic instant verification enabled &bull; <button id="support-fallback-toggle-btn" style="background: none; border: none; padding: 0; color: var(--brand-accent); text-decoration: underline; cursor: pointer; font-size: 0.8rem;">Or enter Account # manually</button>
             </div>
 
             <!-- Fallback Input (Hidden by default) -->
@@ -318,9 +325,8 @@
     const authPill = document.getElementById('auth-status-pill');
     const feedbackEl = document.getElementById('passkey-feedback');
 
-    // 1. Run 1-Tap Immediate UI Outage Diagnostics
-    document.getElementById('imm-diagnose-btn')?.addEventListener('click', async () => {
-      log('User clicked "1-Tap Identify & Diagnose Line". Invoking runImmediateAuth with uiMode: "immediate"...', 'info');
+    async function handleSupportAction(actionName, autoOpenChat = false) {
+      log(`User clicked "${actionName}". Invoking runImmediateAuth with uiMode: "immediate"...`, 'info');
       if (feedbackEl) feedbackEl.style.display = 'none';
 
       await runImmediateAuth({
@@ -331,7 +337,7 @@
           log('Querying Optical Line Terminal (OLT) backend for subscriber #FIBER-8849-NY...', 'info');
           log('Telemetry received: Loss of Optical Signal (-34.2 dBm). Sector 4B maintenance active.', 'warning');
 
-          toast(`✨ Identified subscriber: ${user.username}! Telemetry loaded.`);
+          toast(`✨ Identified subscriber: ${user.username}! Loading ${actionName}...`);
 
           // Transition UI to authenticated dashboard
           if (preAuthView) preAuthView.style.display = 'none';
@@ -340,6 +346,14 @@
           if (authPill) {
             authPill.className = 'status-badge verified';
             authPill.innerHTML = `<span>🟢 Verified Subscriber: ${user.username}</span>`;
+          }
+
+          if (autoOpenChat) {
+            const chatBox = document.getElementById('support-chat-box');
+            if (chatBox) {
+              chatBox.style.display = 'block';
+              log('Initialized pre-authenticated live chat with engineer.', 'info');
+            }
           }
         },
         onFallback: (reason, err) => {
@@ -350,7 +364,7 @@
             feedbackEl.style.display = 'block';
             feedbackEl.innerHTML = `
               <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey on this Device</div>
-              <div>If you have not registered a passkey on this phone, create one in 5 seconds for instant 1-tap support:</div>
+              <div>If you have not registered a passkey on this phone, look up manually or create a passkey below:</div>
               <div style="margin-top: 8px;">
                 <a href="register.html" class="btn btn-primary btn-full" style="font-size: 0.82rem; padding: 6px 10px; text-align: center;">
                   ✨ Create Passkey (register.html) &rarr;
@@ -360,6 +374,19 @@
           }
         }
       });
+    }
+
+    // Attach to the 3 intent-based action buttons
+    document.getElementById('imm-diag-action-btn')?.addEventListener('click', () => {
+      handleSupportAction('Run Automatic Line Diagnostics', false);
+    });
+
+    document.getElementById('imm-chat-action-btn')?.addEventListener('click', () => {
+      handleSupportAction('Start Priority Support Chat', true);
+    });
+
+    document.getElementById('imm-outage-action-btn')?.addEventListener('click', () => {
+      handleSupportAction('Check Neighborhood Outages', false);
     });
 
     // Toggle Manual Fallback
