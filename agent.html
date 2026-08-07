@@ -21,25 +21,38 @@
       }
     }
 
-    /* Chatbot Interface */
+    /* Gemini in Chrome Side Panel Styling */
     .chat-panel {
-      background: var(--surface);
-      border: 1px solid var(--border-color);
+      background: #ffffff;
+      border: 1px solid #d2e3fc;
       border-radius: var(--radius-lg);
       display: flex;
       flex-direction: column;
       height: 600px;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 4px 20px rgba(66, 133, 244, 0.08);
       overflow: hidden;
     }
 
     .chat-header {
       padding: 16px 20px;
-      background: var(--surface-subtle);
-      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(135deg, #f8fafd 0%, #eef4ff 100%);
+      border-bottom: 1px solid #d2e3fc;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .gemini-sparkle-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #4285f4 0%, #9b72cb 50%, #d96570 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 800;
     }
 
     .chat-body {
@@ -59,22 +72,22 @@
     }
 
     .agent-avatar {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, #4285f4 0%, #9b72cb 100%);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 0.95rem;
       flex-shrink: 0;
     }
 
     .agent-bubble {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      color: #1e293b;
+      background: #f8fafd;
+      border: 1px solid #d2e3fc;
+      color: #1f1f1f;
       padding: 12px 16px;
       border-radius: 14px;
       font-size: 0.92rem;
@@ -83,7 +96,7 @@
 
     .user-msg {
       align-self: flex-end;
-      background: #111111;
+      background: #1a73e8;
       color: #ffffff;
       padding: 10px 16px;
       border-radius: 14px;
@@ -93,9 +106,9 @@
     }
 
     .agent-tool-call {
-      background: #faf5ff;
-      border: 1px solid #e9d5ff;
-      color: #6b21a8;
+      background: #eef4ff;
+      border: 1px solid #c2e7ff;
+      color: #0b57d0;
       border-radius: 8px;
       padding: 8px 12px;
       font-size: 0.82rem;
@@ -112,27 +125,26 @@
       gap: 8px;
       overflow-x: auto;
       padding: 8px 16px;
-      background: var(--surface-subtle);
-      border-top: 1px solid var(--border-color);
+      background: #f8fafd;
+      border-top: 1px solid #d2e3fc;
     }
 
     .prompt-chip {
       background: #ffffff;
-      border: 1px solid var(--border-color);
+      border: 1px solid #c2e7ff;
       border-radius: var(--radius-pill);
       padding: 6px 12px;
       font-size: 0.78rem;
       font-weight: 600;
-      color: var(--text-main);
+      color: #0b57d0;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.15s ease;
     }
 
     .prompt-chip:hover {
-      background: var(--brand-accent-light);
-      border-color: var(--brand-accent);
-      color: #0033aa;
+      background: #e8f0fe;
+      border-color: #1a73e8;
     }
 
     .chat-footer {
@@ -186,8 +198,8 @@
 
     /* Biometric Authorization Box */
     .hitl-auth-box {
-      border: 2px dashed #7c3aed;
-      background: #fdf4ff;
+      border: 2px dashed #1a73e8;
+      background: #e8f0fe;
       border-radius: var(--radius-md);
       padding: 20px;
       text-align: center;
@@ -196,8 +208,8 @@
 
     .hitl-auth-box.active {
       border-style: solid;
-      border-color: #9333ea;
-      box-shadow: 0 0 20px rgba(147, 51, 234, 0.2);
+      border-color: #1a73e8;
+      box-shadow: 0 0 20px rgba(26, 115, 232, 0.2);
     }
 
     /* Confirmed Boarding Pass */
@@ -217,31 +229,31 @@
     <section class="imm-demo-container">
       <div class="imm-demo-header">
         <div>
-          <h2>AI Agent Web Delegation &mdash; Human-in-the-Loop Biometric Gate</h2>
+          <h2>Gemini in Chrome (Side Panel) &amp; WebMCP &mdash; Biometric Gate</h2>
           <p>
-            Demonstrating how an autonomous AI Agent researches travel itineraries and uses WebAuthn Immediate UI (<code>uiMode: 'immediate'</code>) as a 1-second physical biometric authorization gate.
+            Demonstrating how <strong>Gemini in Chrome (Side Panel Agent)</strong> discovers webpage WebMCP tools to assemble travel bookings, using <strong>WebAuthn Immediate UI (<code>uiMode: 'immediate'</code>)</strong> as the 1-second biometric authorization checkpoint.
           </p>
         </div>
         <div>
-          <span class="imm-tag new">WebMCP + Chrome AI</span>
+          <span class="imm-tag new" style="background: #e8f0fe; color: #1a73e8;">Gemini Side Panel + WebMCP</span>
         </div>
       </div>
 
       <!-- Architecture Alert -->
-      <div style="background: #faf5ff; border-left: 4px solid #9333ea; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #581c87; font-size: 0.92rem; line-height: 1.5;">
-        <strong>Zero API Key &amp; Chrome Built-in AI:</strong> This demo runs 100% client-side. If supported in your browser, it leverages Chrome's <strong>Built-in Prompt API (Gemini Nano)</strong> with zero API keys required. The AI agent automates searching &amp; form-filling, while Immediate UI prompts the physical human's fingerprint to authorize payment without sharing passwords!
+      <div style="background: #eef4ff; border-left: 4px solid #1a73e8; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #0b57d0; font-size: 0.92rem; line-height: 1.5;">
+        <strong>How the Side Panel + WebMCP Architecture Works:</strong> The user gives a travel prompt to <strong>Gemini in Chrome (Side Panel)</strong>. Gemini calls the webpage's WebMCP tools (<code>search_flights</code>, <code>select_seats</code>, <code>prepare_checkout</code>) to build the itinerary in the DOM. When Gemini issues the final booking call, the site triggers <strong>Immediate UI</strong> to prompt the human's fingerprint for a 1-second cryptographic authorization—with zero passwords or API keys shared!
       </div>
 
       <!-- Agent + Travel Portal Grid -->
       <div class="agent-demo-grid">
-        <!-- Left: AI Agent Chatbot Panel -->
+        <!-- Left: Gemini in Chrome Side Panel Simulation -->
         <div class="chat-panel">
           <div class="chat-header">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div class="agent-avatar">🤖</div>
+              <div class="gemini-sparkle-logo">✨</div>
               <div>
-                <div style="font-weight: 800; font-size: 0.95rem;">AeroBot Travel Agent</div>
-                <div id="engine-status" style="font-size: 0.75rem; color: #7c3aed; font-weight: 600;">⚡ Chrome Built-in AI / WebMCP Ready</div>
+                <div style="font-weight: 800; font-size: 0.95rem; color: #1f1f1f;">Gemini in Chrome (Side Panel)</div>
+                <div id="engine-status" style="font-size: 0.75rem; color: #1a73e8; font-weight: 600;">🔗 Connected to ApexAir WebMCP Tools</div>
               </div>
             </div>
             <button id="reset-chat-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 8px;">Reset</button>
@@ -249,9 +261,9 @@
 
           <div id="chat-stream" class="chat-body">
             <div class="agent-msg">
-              <div class="agent-avatar">🤖</div>
+              <div class="agent-avatar">✨</div>
               <div class="agent-bubble">
-                Hi! I'm <strong>AeroBot</strong>, your autonomous travel concierge. Tell me what trip you'd like to book. I will research the best flight, select seats, prepare the checkout, and ask for your 1-tap passkey confirmation!
+                Hi! I'm <strong>Gemini in Chrome</strong>. I've connected to this webpage's WebMCP travel tools. Ask me to find a flight or hotel, and I'll assemble the itinerary and request your 1-tap passkey confirmation!
               </div>
             </div>
           </div>
@@ -264,8 +276,8 @@
           </div>
 
           <div class="chat-footer">
-            <input id="agent-input" type="text" placeholder="Ask AeroBot to book a flight or hotel..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-pill); font-size: 0.9rem;">
-            <button id="agent-send-btn" class="btn btn-primary" style="border-radius: var(--radius-pill); padding: 10px 18px; font-weight: 700;">Send</button>
+            <input id="agent-input" type="text" placeholder="Ask Gemini Side Panel to book a flight..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-pill); font-size: 0.9rem;">
+            <button id="agent-send-btn" class="btn btn-primary" style="border-radius: var(--radius-pill); padding: 10px 18px; font-weight: 700; background: #1a73e8;">Ask Gemini</button>
           </div>
         </div>
 
@@ -345,25 +357,14 @@
 
     let currentBooking = null;
 
-    // Check Chrome Built-in AI availability
-    async function checkBuiltInAI() {
+    // WebMCP Protocol & Side Panel Connection
+    function initWebMCPBridge() {
       const statusEl = document.getElementById('engine-status');
-      try {
-        if (window.ai && window.ai.languageModel) {
-          const caps = await window.ai.languageModel.capabilities();
-          if (caps.available !== 'no') {
-            statusEl.textContent = '🟢 Chrome Built-in AI (Gemini Nano) Active';
-            log('Chrome Built-in Prompt API (Gemini Nano) detected and active!', 'success');
-            return true;
-          }
-        }
-      } catch (e) {}
-      statusEl.textContent = '⚡ WebMCP Autonomous Agent Engine (Simulated Client)';
-      log('Running WebMCP Client Engine with zero API keys required.', 'info');
-      return false;
+      statusEl.textContent = '🔗 WebMCP Active • 4 Travel Tools Exposed';
+      log('WebMCP Protocol Initialized. Webpage registered 4 tools: search_flights, select_seats, prepare_checkout, request_biometric_auth', 'info');
     }
 
-    checkBuiltInAI();
+    initWebMCPBridge();
 
     function addMessage(sender, text, isToolCall = false) {
       if (sender === 'user') {
@@ -375,10 +376,10 @@
         const msgContainer = document.createElement('div');
         msgContainer.className = 'agent-msg';
         msgContainer.innerHTML = `
-          <div class="agent-avatar">🤖</div>
+          <div class="agent-avatar">✨</div>
           <div class="agent-bubble">
             ${text}
-            ${isToolCall ? `<div class="agent-tool-call">⚙️ WebMCP Tool: ${isToolCall}</div>` : ''}
+            ${isToolCall ? `<div class="agent-tool-call">⚙️ WebMCP Tool Call: ${isToolCall}</div>` : ''}
           </div>
         `;
         chatStream.appendChild(msgContainer);
@@ -386,21 +387,22 @@
       chatStream.scrollTop = chatStream.scrollHeight;
     }
 
-    // Process Travel Request
+    // Process Travel Request from Gemini Side Panel
     async function handleUserPrompt(promptText) {
       if (!promptText.trim()) return;
       addMessage('user', promptText);
       agentInput.value = '';
 
-      log(`AI Agent received request: "${promptText}"`, 'info');
+      log(`[Gemini in Chrome] Side Panel received prompt: "${promptText}"`, 'info');
 
-      // Step 1: Agent Reasoning & Tool Call
+      // Step 1: Gemini calls WebMCP search_flights tool on webpage
       setTimeout(() => {
-        addMessage('agent', 'Analyzing available routes and comparing live airline pricing...', 'search_flights({ origin: "JFK", dest: "SFO", max_price: 400 })');
-        log('WebMCP Tool Invoked: search_flights(origin="JFK", destination="SFO")', 'info');
-      }, 600);
+        addMessage('agent', 'Connecting to ApexAir WebMCP endpoint to query flight routes and live pricing...', 'webmcp/callTool("search_flights", { origin: "JFK", dest: "SFO", max_price: 400 })');
+        log('WebMCP Request -> tools/call: search_flights(origin="JFK", destination="SFO")', 'info');
+        log('WebMCP Response <- Found 12 matching flights. Best match: ApexAir AA-482 ($389.00).', 'info');
+      }, 700);
 
-      // Step 2: Auto-Fill & Itinerary Preparation
+      // Step 2: Gemini calls WebMCP prepare_checkout tool to populate DOM
       setTimeout(() => {
         currentBooking = {
           flight: 'ApexAir Flight AA-482 (Boeing 787-9 Dreamliner)',
@@ -413,11 +415,11 @@
           price: '$389.00'
         };
 
-        addMessage('agent', `I found the perfect flight! Nonstop Delta/ApexAir flight for <strong>$389.00</strong> with Aisle seat 12C. I've prepared the checkout. Please authorize payment with your passkey!`, 'prepare_checkout({ flight: "AA-482", total: 389.00 })');
-        log('WebMCP Tool Invoked: prepare_checkout() -> Generated itinerary payload for $389.00', 'success');
+        addMessage('agent', `I've selected nonstop <strong>ApexAir Flight AA-482</strong> with Aisle seat 12C for <strong>$389.00</strong>. I've populated the booking details on the page.<br><br>Please confirm your payment using your 1-tap passkey!`, 'webmcp/callTool("prepare_checkout", { flightId: "AA-482", total: 389.00 })');
+        log('WebMCP Request -> tools/call: prepare_checkout(flight="AA-482", price=389.00)', 'success');
 
         renderItinerary(currentBooking);
-      }, 1500);
+      }, 1600);
     }
 
     function renderItinerary(booking) {
@@ -558,16 +560,16 @@
     document.getElementById('reset-chat-btn')?.addEventListener('click', () => {
       chatStream.innerHTML = `
         <div class="agent-msg">
-          <div class="agent-avatar">🤖</div>
+          <div class="agent-avatar">✨</div>
           <div class="agent-bubble">
-            Chat reset. Tell me what trip you'd like to book!
+            Session reset. Tell Gemini what trip you'd like to book!
           </div>
         </div>
       `;
       itineraryDetails.innerHTML = `
         <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
           <div style="font-size: 2.4rem; margin-bottom: 10px;">🗺️</div>
-          <p style="font-size: 0.92rem; margin: 0;">Tell AeroBot where you want to travel.<br>The AI will construct the booking itinerary here.</p>
+          <p style="font-size: 0.92rem; margin: 0;">Ask Gemini in Chrome to find a flight.<br>The WebMCP tools will construct the booking itinerary here.</p>
         </div>
       `;
       if (hitlBox) hitlBox.style.display = 'none';
