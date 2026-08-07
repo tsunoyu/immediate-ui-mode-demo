@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agentic Travel Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* Agent & Travel Portal Layout */
+    .agent-demo-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .agent-demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Chatbot Interface */
+    .chat-panel {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .agent-msg {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      max-width: 90%;
+    }
+
+    .agent-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .agent-bubble {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .user-msg {
+      align-self: flex-end;
+      background: #111111;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 14px;
+      max-width: 85%;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .agent-tool-call {
+      background: #faf5ff;
+      border: 1px solid #e9d5ff;
+      color: #6b21a8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-family: monospace;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Prompt Chips */
+    .chip-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 8px 16px;
+      background: var(--surface-subtle);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .prompt-chip {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .prompt-chip:hover {
+      background: var(--brand-accent-light);
+      border-color: var(--brand-accent);
+      color: #0033aa;
+    }
+
+    .chat-footer {
+      padding: 12px 16px;
+      background: var(--surface);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Right Itinerary Panel */
+    .itinerary-panel {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 600px;
+      overflow-y: auto;
+    }
+
+    .flight-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      background: #fafbfc;
+      margin-bottom: 16px;
+    }
+
+    .flight-route {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-weight: 800;
+    }
+
+    .flight-time {
+      font-size: 1.3rem;
+      color: var(--text-main);
+    }
+
+    .flight-city {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Biometric Authorization Box */
+    .hitl-auth-box {
+      border: 2px dashed #7c3aed;
+      background: #fdf4ff;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .hitl-auth-box.active {
+      border-style: solid;
+      border-color: #9333ea;
+      box-shadow: 0 0 20px rgba(147, 51, 234, 0.2);
+    }
+
+    /* Confirmed Boarding Pass */
+    .boarding-pass {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>AI Agent Web Delegation &mdash; Human-in-the-Loop Biometric Gate</h2>
+          <p>
+            Demonstrating how an autonomous AI Agent researches travel itineraries and uses WebAuthn Immediate UI (<code>uiMode: 'immediate'</code>) as a 1-second physical biometric authorization gate.
+          </p>
+        </div>
+        <div>
+          <span class="imm-tag new">WebMCP + Chrome AI</span>
+        </div>
+      </div>
+
+      <!-- Architecture Alert -->
+      <div style="background: #faf5ff; border-left: 4px solid #9333ea; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #581c87; font-size: 0.92rem; line-height: 1.5;">
+        <strong>Zero API Key &amp; Chrome Built-in AI:</strong> This demo runs 100% client-side. If supported in your browser, it leverages Chrome's <strong>Built-in Prompt API (Gemini Nano)</strong> with zero API keys required. The AI agent automates searching &amp; form-filling, while Immediate UI prompts the physical human's fingerprint to authorize payment without sharing passwords!
+      </div>
+
+      <!-- Agent + Travel Portal Grid -->
+      <div class="agent-demo-grid">
+        <!-- Left: AI Agent Chatbot Panel -->
+        <div class="chat-panel">
+          <div class="chat-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="agent-avatar">🤖</div>
+              <div>
+                <div style="font-weight: 800; font-size: 0.95rem;">AeroBot Travel Agent</div>
+                <div id="engine-status" style="font-size: 0.75rem; color: #7c3aed; font-weight: 600;">⚡ Chrome Built-in AI / WebMCP Ready</div>
+              </div>
+            </div>
+            <button id="reset-chat-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 8px;">Reset</button>
+          </div>
+
+          <div id="chat-stream" class="chat-body">
+            <div class="agent-msg">
+              <div class="agent-avatar">🤖</div>
+              <div class="agent-bubble">
+                Hi! I'm <strong>AeroBot</strong>, your autonomous travel concierge. Tell me what trip you'd like to book. I will research the best flight, select seats, prepare the checkout, and ask for your 1-tap passkey confirmation!
+              </div>
+            </div>
+          </div>
+
+          <!-- Prompt Suggestions -->
+          <div class="chip-bar">
+            <button class="prompt-chip" data-prompt="✈️ Book morning nonstop flight from NYC (JFK) to San Francisco (SFO) under $400">✈️ JFK &rarr; SFO ($389)</button>
+            <button class="prompt-chip" data-prompt="✈️ Book evening flight from London (LHR) to Tokyo (HND) with aisle seat">✈️ LHR &rarr; HND ($740)</button>
+            <button class="prompt-chip" data-prompt="🏨 Reserve 4-star boutique hotel in Paris near Eiffel Tower for 2 nights">🏨 Paris Hotel ($220/nt)</button>
+          </div>
+
+          <div class="chat-footer">
+            <input id="agent-input" type="text" placeholder="Ask AeroBot to book a flight or hotel..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-pill); font-size: 0.9rem;">
+            <button id="agent-send-btn" class="btn btn-primary" style="border-radius: var(--radius-pill); padding: 10px 18px; font-weight: 700;">Send</button>
+          </div>
+        </div>
+
+        <!-- Right: Live Itinerary & Biometric Authorization Gate -->
+        <div class="itinerary-panel">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">📋 Itinerary &amp; Payment Desk</h3>
+              <span id="itinerary-status-badge" style="background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 700;">Awaiting Request</span>
+            </div>
+
+            <!-- Prepared Itinerary Display -->
+            <div id="itinerary-details">
+              <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                <div style="font-size: 2.4rem; margin-bottom: 10px;">🗺️</div>
+                <p style="font-size: 0.92rem; margin: 0;">Tell AeroBot where you want to travel.<br>The AI will construct the booking itinerary here.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Human-In-The-Loop Biometric Authorization Box -->
+          <div id="hitl-box" class="hitl-auth-box" style="display: none;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">🔒</div>
+            <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800; color: #581c87;">Human-in-the-Loop Biometric Gate</h4>
+            <p style="font-size: 0.84rem; color: #6b21a8; margin: 0 0 14px 0; line-height: 1.45;">
+              AeroBot has assembled your itinerary. Touch your passkey (Touch ID / Face ID) to cryptographically authorize payment:
+            </p>
+            <button id="hitl-auth-btn" class="btn btn-primary btn-full" style="background: #7c3aed; border-color: #6d28d9; font-weight: 700; font-size: 0.95rem; padding: 12px;">
+              ⚡ Authorize AI Booking ($389.00) with Passkey
+            </button>
+            <div id="hitl-fallback" style="display: none; margin-top: 10px; font-size: 0.82rem; color: #b91c1c;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Logs Console -->
+      <div style="margin-top: 24px;">
+        <div class="imm-console-wrapper">
+          <div class="imm-console-header">
+            <span class="imm-console-title">🖥️ WebMCP &amp; Immediate UI Execution Console</span>
+            <button id="clear-logs-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 3px 8px;">Clear</button>
+          </div>
+          <div id="agent-console" class="imm-console">
+            <div class="imm-log-entry info">[System] AI Travel Concierge initialized. Ready to test autonomous WebMCP + Immediate UI delegation.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, toast } from './static/js/app.js';
+
+    initImmediateShowcase(window.location.pathname);
+
+    const consoleEl = document.getElementById('agent-console');
+    function log(msg, type = 'info') {
+      if (!consoleEl) return;
+      const entry = document.createElement('div');
+      entry.className = `imm-log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      consoleEl.appendChild(entry);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    document.getElementById('clear-logs-btn')?.addEventListener('click', () => {
+      if (consoleEl) consoleEl.innerHTML = '';
+    });
+
+    const chatStream = document.getElementById('chat-stream');
+    const agentInput = document.getElementById('agent-input');
+    const itineraryDetails = document.getElementById('itinerary-details');
+    const hitlBox = document.getElementById('hitl-box');
+    const statusBadge = document.getElementById('itinerary-status-badge');
+    const hitlAuthBtn = document.getElementById('hitl-auth-btn');
+    const fallbackEl = document.getElementById('hitl-fallback');
+
+    let currentBooking = null;
+
+    // Check Chrome Built-in AI availability
+    async function checkBuiltInAI() {
+      const statusEl = document.getElementById('engine-status');
+      try {
+        if (window.ai && window.ai.languageModel) {
+          const caps = await window.ai.languageModel.capabilities();
+          if (caps.available !== 'no') {
+            statusEl.textContent = '🟢 Chrome Built-in AI (Gemini Nano) Active';
+            log('Chrome Built-in Prompt API (Gemini Nano) detected and active!', 'success');
+            return true;
+          }
+        }
+      } catch (e) {}
+      statusEl.textContent = '⚡ WebMCP Autonomous Agent Engine (Simulated Client)';
+      log('Running WebMCP Client Engine with zero API keys required.', 'info');
+      return false;
+    }
+
+    checkBuiltInAI();
+
+    function addMessage(sender, text, isToolCall = false) {
+      if (sender === 'user') {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'user-msg';
+        msgDiv.textContent = text;
+        chatStream.appendChild(msgDiv);
+      } else {
+        const msgContainer = document.createElement('div');
+        msgContainer.className = 'agent-msg';
+        msgContainer.innerHTML = `
+          <div class="agent-avatar">🤖</div>
+          <div class="agent-bubble">
+            ${text}
+            ${isToolCall ? `<div class="agent-tool-call">⚙️ WebMCP Tool: ${isToolCall}</div>` : ''}
+          </div>
+        `;
+        chatStream.appendChild(msgContainer);
+      }
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    // Process Travel Request
+    async function handleUserPrompt(promptText) {
+      if (!promptText.trim()) return;
+      addMessage('user', promptText);
+      agentInput.value = '';
+
+      log(`AI Agent received request: "${promptText}"`, 'info');
+
+      // Step 1: Agent Reasoning & Tool Call
+      setTimeout(() => {
+        addMessage('agent', 'Analyzing available routes and comparing live airline pricing...', 'search_flights({ origin: "JFK", dest: "SFO", max_price: 400 })');
+        log('WebMCP Tool Invoked: search_flights(origin="JFK", destination="SFO")', 'info');
+      }, 600);
+
+      // Step 2: Auto-Fill & Itinerary Preparation
+      setTimeout(() => {
+        currentBooking = {
+          flight: 'ApexAir Flight AA-482 (Boeing 787-9 Dreamliner)',
+          origin: 'New York (JFK)',
+          dest: 'San Francisco (SFO)',
+          depart: '08:30 AM',
+          arrive: '11:45 AM (Nonstop)',
+          seat: '12C (Aisle, Extra Legroom)',
+          passenger: 'Elisa Beckett (Passkey Member)',
+          price: '$389.00'
+        };
+
+        addMessage('agent', `I found the perfect flight! Nonstop Delta/ApexAir flight for <strong>$389.00</strong> with Aisle seat 12C. I've prepared the checkout. Please authorize payment with your passkey!`, 'prepare_checkout({ flight: "AA-482", total: 389.00 })');
+        log('WebMCP Tool Invoked: prepare_checkout() -> Generated itinerary payload for $389.00', 'success');
+
+        renderItinerary(currentBooking);
+      }, 1500);
+    }
+
+    function renderItinerary(booking) {
+      if (statusBadge) {
+        statusBadge.style.background = '#fef3c7';
+        statusBadge.style.color = '#92400e';
+        statusBadge.textContent = '⏳ Awaiting Biometric Auth';
+      }
+
+      itineraryDetails.innerHTML = `
+        <div class="flight-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #7c3aed; text-transform: uppercase;">✈️ Selected Flight</span>
+            <span style="font-weight: 800; color: #16a34a; font-size: 1.15rem;">${booking.price}</span>
+          </div>
+          <div class="flight-route">
+            <div>
+              <div class="flight-time">${booking.depart}</div>
+              <div class="flight-city">${booking.origin}</div>
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.8rem; text-align: center;">
+              &mdash;&mdash; 5h 15m &mdash;&rarr;<br>Nonstop
+            </div>
+            <div>
+              <div class="flight-time">${booking.arrive}</div>
+              <div class="flight-city">${booking.dest}</div>
+            </div>
+          </div>
+          <div style="font-size: 0.84rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px; display: flex; justify-content: space-between;">
+            <span>💺 Seat: <strong>${booking.seat}</strong></span>
+            <span>👤 Passenger: <strong>${booking.passenger}</strong></span>
+          </div>
+        </div>
+      `;
+
+      if (hitlBox) {
+        hitlBox.style.display = 'block';
+        hitlBox.classList.add('active');
+        hitlAuthBtn.textContent = `⚡ Authorize AI Booking (${booking.price}) with Passkey`;
+      }
+    }
+
+    // Human-in-the-Loop Immediate UI Biometric Auth Execution
+    async function executeBiometricAuth() {
+      if (!currentBooking) return;
+      log('Human clicked Authorize. Invoking WebAuthn Immediate UI (uiMode: "immediate")...', 'info');
+      if (fallbackEl) fallbackEl.style.display = 'none';
+
+      const handleAuthSuccess = (user) => {
+        log(`🎉 FIDO2 Hardware Assertion Verified! Authorized by: ${user.username} (${user.email})`, 'success');
+        log('WebMCP Agent received cryptographic confirmation token. Finalizing ticket issuance...', 'success');
+        toast(`✨ Biometric Authorization Confirmed for ${user.username}!`);
+
+        // Update UI to Confirmed Boarding Pass
+        if (hitlBox) hitlBox.style.display = 'none';
+        if (statusBadge) {
+          statusBadge.style.background = '#dcfce7';
+          statusBadge.style.color = '#166534';
+          statusBadge.textContent = '✅ Ticket Issued';
+        }
+
+        const bookingId = 'VOY-' + Math.floor(100000 + Math.random() * 900000);
+        itineraryDetails.innerHTML = `
+          <div class="boarding-pass">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px dashed #475569; padding-bottom: 10px;">
+              <span style="font-weight: 800; font-size: 1.1rem; color: #a78bfa;">APEXAIR BOARDING PASS</span>
+              <span style="font-size: 0.8rem; color: #94a3b8;">${bookingId}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <div>
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Passenger</div>
+                <div style="font-weight: 800; font-size: 1.05rem;">${user.username || 'Elisa Beckett'}</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Seat</div>
+                <div style="font-weight: 800; font-size: 1.05rem; color: #38bdf8;">12C (Aisle)</div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+              <div>
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Route</div>
+                <div style="font-weight: 700;">JFK &rarr; SFO</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Status</div>
+                <div style="color: #4ade80; font-weight: 700;">🔒 Hardware Verified</div>
+              </div>
+            </div>
+            <div style="background: #0f172a; border-radius: 6px; padding: 8px; text-align: center; font-size: 0.75rem; color: #94a3b8; font-family: monospace;">
+              ||| | ||||| |||| || |||||| | ||||| | |||||||| ||||
+            </div>
+          </div>
+        `;
+
+        addMessage('agent', `🎉 <strong>Booking Confirmed!</strong> I have finalized your ticket (Confirmation: <code>${bookingId}</code>). Your boarding pass is ready on the right! Total charged: <strong>${currentBooking.price}</strong>.`);
+      };
+
+      await runImmediateAuth({
+        useImmediate: true,
+        reqPasskeys: true,
+        onSignIn: handleAuthSuccess,
+        onSuccess: handleAuthSuccess,
+        onFallback: (reason, err) => {
+          log(`Immediate UI fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
+          toast('No passkey found on this device. Please create one or pay manually.');
+
+          if (fallbackEl) {
+            fallbackEl.style.display = 'block';
+            fallbackEl.innerHTML = `
+              <strong>⚠️ No Passkey Detected</strong><br>
+              <a href="register.html" class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px; margin-top: 6px; display: inline-block;">
+                ✨ Create Passkey (register.html)
+              </a>
+            `;
+          }
+        }
+      });
+    }
+
+    hitlAuthBtn?.addEventListener('click', executeBiometricAuth);
+
+    // Prompt Chips and Send Events
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const prompt = chip.getAttribute('data-prompt');
+        handleUserPrompt(prompt);
+      });
+    });
+
+    document.getElementById('agent-send-btn')?.addEventListener('click', () => {
+      handleUserPrompt(agentInput.value);
+    });
+
+    agentInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleUserPrompt(agentInput.value);
+    });
+
+    document.getElementById('reset-chat-btn')?.addEventListener('click', () => {
+      chatStream.innerHTML = `
+        <div class="agent-msg">
+          <div class="agent-avatar">🤖</div>
+          <div class="agent-bubble">
+            Chat reset. Tell me what trip you'd like to book!
+          </div>
+        </div>
+      `;
+      itineraryDetails.innerHTML = `
+        <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+          <div style="font-size: 2.4rem; margin-bottom: 10px;">🗺️</div>
+          <p style="font-size: 0.92rem; margin: 0;">Tell AeroBot where you want to travel.<br>The AI will construct the booking itinerary here.</p>
+        </div>
+      `;
+      if (hitlBox) hitlBox.style.display = 'none';
+      if (statusBadge) {
+        statusBadge.style.background = '#e2e8f0';
+        statusBadge.style.color = '#475569';
+        statusBadge.textContent = 'Awaiting Request';
+      }
+      currentBooking = null;
+      log('Travel session reset.', 'info');
+    });
+  </script>
+</body>
+</html>

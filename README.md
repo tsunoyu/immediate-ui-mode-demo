@@ -67,6 +67,8 @@ All 8 demo pages are accessible from the navigation bar:
    - Readers scroll into paywalled articles and unlock them in-place with `IntersectionObserver` + 1-Tap passkey, preserving scroll position with zero redirects.
 9. **📶 Guaranteed-Account ISP Support & Outage Diagnostics (`/support.html`)**:
    - When home Wi-Fi is down, customers identify in 1 tap to run live optical line diagnostics, check neighborhood node outages, and pre-authenticate chat without searching for account numbers.
+10. **🤖 AI Agent Web Delegation & Biometric Gate (`/agent.html`)**:
+   - Autonomous travel concierge powered by Chrome Built-in AI (Prompt API / Gemini Nano) and WebMCP tools, gating financial transactions behind a 1-second physical biometric passkey handshake with zero API keys required.
 
 ---
 

@@ -24,6 +24,7 @@ const NAV_GROUPS = [
   {
     title: 'New Use Cases',
     items: [
+      { href: 'agent.html', label: '🤖 AI Agent Delegation' },
       { href: 'community.html', label: '💬 Commenting' },
       { href: 'gated.html', label: '📄 Gated Content' },
       { href: 'publisher.html', label: '📰 Scroll Paywall' },
