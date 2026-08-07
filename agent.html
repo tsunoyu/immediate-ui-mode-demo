@@ -6,6 +6,18 @@
   <title>ApexAir Travel | WebMCP & Immediate UI Authentication</title>
   <link rel="stylesheet" href="static/css/style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="webmcp" type="application/json" href="webmcp.json">
+  <script type="application/webmcp+json">
+  {
+    "name": "ApexAir Travel WebMCP Tools",
+    "description": "WebMCP travel tools for Gemini in Chrome to inspect flight details and authenticate bookings with passkeys.",
+    "tools": [
+      { "name": "get_account_status", "description": "Check if user is logged in" },
+      { "name": "login_with_passkey", "description": "Sign in with saved passkey using WebAuthn Immediate UI" },
+      { "name": "confirm_booking", "description": "Confirm flight reservation with 1-tap passkey" }
+    ]
+  }
+  </script>
   <style>
     /* Clean Standard Travel Website Layout */
     .travel-site-card {
@@ -138,6 +150,16 @@
         </div>
       </div>
 
+      <!-- 1-Click Passkey Setup Helper -->
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 14px 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div style="font-size: 0.9rem; color: #1e40af;">
+          🔑 <strong>Passkey Setup for AI Agent:</strong> Register a passkey for <code>tsunoyu.github.io</code> so Gemini in Chrome finds credentials on this device:
+        </div>
+        <button id="quick-create-passkey-btn" class="btn btn-primary" style="font-size: 0.84rem; padding: 7px 16px; background: #2563eb; font-weight: 700; border-radius: var(--radius-pill);">
+          ✨ Create Passkey on this Device (2s)
+        </button>
+      </div>
+
       <!-- Standard Travel Website -->
       <div class="travel-site-card">
         <!-- Site Navigation -->
@@ -150,7 +172,7 @@
             <a href="#">Book Flights</a>
             <a href="#">Hotels</a>
             <a href="#">My Trips</a>
-            <button id="nav-login-btn" class="btn btn-primary" style="background: #1a73e8; border-color: #1a73e8; font-size: 0.85rem; padding: 7px 16px; border-radius: var(--radius-pill); font-weight: 700;">
+            <button id="nav-login-btn" data-mcp-tool="login_with_passkey" data-mcp-action="authenticate" class="btn btn-primary" style="background: #1a73e8; border-color: #1a73e8; font-size: 0.85rem; padding: 7px 16px; border-radius: var(--radius-pill); font-weight: 700;">
               👤 Sign In
             </button>
             <div id="nav-user-pill" style="display: none; align-items: center; gap: 8px; font-size: 0.85rem; color: #4ade80; font-weight: 700;">
@@ -279,7 +301,7 @@
   </div>
 
   <script type="module">
-    import { initImmediateShowcase, runImmediateAuth, toast } from './static/js/app.js';
+    import { initImmediateShowcase, runImmediateAuth, createTestPasskey, toast } from './static/js/app.js';
 
     initImmediateShowcase(window.location.pathname);
 
@@ -302,11 +324,28 @@
     const feedbackEl = document.getElementById('passkey-feedback');
     const navLoginBtn = document.getElementById('nav-login-btn');
     const navUserPill = document.getElementById('nav-user-pill');
+    const quickPasskeyBtn = document.getElementById('quick-create-passkey-btn');
 
     let isAuthenticated = false;
 
+    // Quick Passkey Creator Handler
+    quickPasskeyBtn?.addEventListener('click', async () => {
+      quickPasskeyBtn.disabled = true;
+      quickPasskeyBtn.textContent = '⏳ Registering Passkey...';
+      const ok = await createTestPasskey('Elisa Beckett', 'elisa.beckett@demogmail.com');
+      if (ok) {
+        quickPasskeyBtn.textContent = '✅ Passkey Active on this Device';
+        quickPasskeyBtn.style.background = '#16a34a';
+        log('🎉 Passkey successfully registered for tsunoyu.github.io! Ready for AI agent login.', 'success');
+        toast('🎉 Passkey registered! Gemini in Chrome can now sign in.');
+      } else {
+        quickPasskeyBtn.disabled = false;
+        quickPasskeyBtn.textContent = '✨ Create Passkey on this Device (2s)';
+      }
+    });
+
     // 1. Declare standard WebMCP Interface for Gemini in Chrome Side Panel
-    window.__webmcp = {
+    const webmcpTools = {
       manifest: {
         name: 'ApexAir Travel Portal WebMCP',
         version: '1.0.0',
@@ -341,6 +380,14 @@
       }
     };
 
+    window.__webmcp = webmcpTools;
+    window.webmcp = webmcpTools;
+    try {
+      if (typeof navigator !== 'undefined') {
+        navigator.modelContextProtocol = webmcpTools;
+      }
+    } catch (e) {}
+
     // 2. Perform Immediate UI Passkey Sign-In
     async function handlePasskeySignIn() {
       if (isAuthenticated) return;
@@ -374,18 +421,13 @@
         onSuccess: handleAuthSuccess,
         onFallback: (reason, err) => {
           log(`Immediate UI fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
-          toast('No passkey found on this device. Please create a passkey to sign in.');
+          toast('No passkey found on this device. Please create a passkey first.');
 
           if (feedbackEl) {
             feedbackEl.style.display = 'block';
             feedbackEl.innerHTML = `
               <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey on this Device</div>
-              <div>Create a travel passkey in 5 seconds to unlock 1-tap sign-in:</div>
-              <div style="margin-top: 8px;">
-                <a href="register.html" class="btn btn-primary" style="font-size: 0.82rem; padding: 6px 12px; text-align: center; display: inline-block;">
-                  ✨ Create Passkey (register.html) &rarr;
-                </a>
-              </div>
+              <div>Click the blue button at the top to create a passkey for this site in 2 seconds.</div>
             `;
           }
         }

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "ApexAir Travel WebMCP Tools",
+  "description": "WebMCP travel tools for Gemini in Chrome to inspect flight details and authenticate bookings with passkeys.",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "get_account_status",
+      "description": "Checks whether the user is currently signed into their ApexAir account.",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "login_with_passkey",
+      "description": "Triggers WebAuthn Immediate UI Mode to authenticate the user with their saved passkey in 1 tap without passwords.",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "confirm_booking",
+      "description": "Authenticates and finalizes the flight reservation for ApexAir Flight AA-482.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "flightId": { "type": "string", "description": "Flight identification number" },
+          "totalAmount": { "type": "string", "description": "Total ticket price in USD" }
+        }
+      }
+    }
+  ]
+}
