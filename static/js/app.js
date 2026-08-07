@@ -27,6 +27,7 @@ const NAV_GROUPS = [
       { href: 'community.html', label: '💬 Commenting' },
       { href: 'gated.html', label: '📄 Gated Content' },
       { href: 'publisher.html', label: '📰 Scroll Paywall' },
+      { href: 'support.html', label: '📶 ISP Support' },
       { href: 'switcher.html', label: '🔄 Account Switcher' },
     ],
   },

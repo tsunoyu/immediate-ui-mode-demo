@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISP & Fiber Support Demo | Immediate UI Mode Showcase</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* Support Portal & Diagnostics Styling */
+    .support-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .isp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .isp-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .isp-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #0055ff 0%, #00d4ff 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .status-badge.alert {
+      background: #fde8e8;
+      color: #9b1c1c;
+      border: 1px solid #f8b4b4;
+    }
+
+    .status-badge.verified {
+      background: #def7ec;
+      color: #03543f;
+      border: 1px solid #84e1bc;
+    }
+
+    /* Diagnostics Dashboard Grid */
+    .diagnostic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .diag-metric {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .diag-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .diag-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Interactive Chat Drawer */
+    .chat-container {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .chat-bubble {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      max-width: 85%;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .chat-bubble.agent {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      margin-right: auto;
+    }
+
+    .chat-bubble.system {
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      color: #0369a1;
+      margin: 12px auto;
+      text-align: center;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="imm-showcase-navbar"></div>
+
+    <section class="imm-demo-container">
+      <div class="imm-demo-header">
+        <div>
+          <h2>Home Fiber &amp; Internet Outage Diagnostics &mdash; Guaranteed Account</h2>
+          <p>
+            Demonstrating 1-tap passkey identity injection (<code>uiMode: 'immediate'</code>) when a customer experiences an internet outage and needs instant line diagnostics.
+          </p>
+        </div>
+        <div>
+          <span class="imm-tag new">High-Impact Scenario</span>
+        </div>
+      </div>
+
+      <!-- Context Alert -->
+      <div style="background: #eef2ff; border-left: 4px solid #4f46e5; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; color: #312e81; font-size: 0.92rem; line-height: 1.5;">
+        <strong>Why "Guaranteed Account" Scenarios are 10x More Powerful:</strong> When home Wi-Fi is down, a stressed customer visits support on mobile 5G data. Forcing them to remember passwords or find 16-digit account numbers causes massive frustration. Immediate UI authenticates their resident passkey in 400ms and injects their physical modem MAC, street address, and optical line signal status automatically!
+      </div>
+
+      <!-- Main ISP Support Portal Card -->
+      <div class="support-card">
+        <!-- ISP Portal Header -->
+        <div class="isp-header">
+          <div class="isp-brand">
+            <div class="isp-logo">⚡</div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800;">Apex Fiber Gigabit Support</h3>
+              <span style="font-size: 0.82rem; color: var(--text-muted);">Residential Fiber Operations Center</span>
+            </div>
+          </div>
+          <div id="auth-status-pill" class="status-badge alert">
+            <span>🔴 Not Authenticated (Guest Session)</span>
+          </div>
+        </div>
+
+        <!-- Pre-Auth / Diagnostic Prompt (Initial State) -->
+        <div id="pre-auth-view">
+          <div style="background: var(--surface-subtle); border-radius: var(--radius-md); padding: 28px; border: 1px solid var(--border-color); text-align: center; margin-bottom: 24px;">
+            <div style="font-size: 2.8rem; margin-bottom: 12px;">📶</div>
+            <h3 style="margin: 0 0 8px 0; font-size: 1.35rem; font-weight: 800;">Home Internet or Wi-Fi Having Issues?</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 520px; margin: 0 auto 24px auto; line-height: 1.5;">
+              Identify your subscription in 1 tap to run a live optical laser telemetry test, check neighborhood node outages, and test your smart router:
+            </p>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+              <button id="imm-diagnose-btn" class="btn btn-primary" style="font-size: 1.05rem; padding: 14px 28px; font-weight: 700; border-radius: var(--radius-pill); box-shadow: 0 4px 14px rgba(0,85,255,0.25);">
+                ⚡ 1-Tap Identify &amp; Diagnose Line (Passkey)
+              </button>
+              <button id="support-fallback-toggle-btn" class="btn btn-outline" style="font-size: 0.84rem; padding: 6px 14px;">
+                🔑 Or look up by Phone Number / Account ID
+              </button>
+            </div>
+
+            <!-- Fallback Input (Hidden by default) -->
+            <div id="fallback-search-box" style="display: none; max-width: 380px; margin: 20px auto 0 auto; text-align: left; background: #fff; padding: 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;">Billing Phone Number or Account #</label>
+              <input id="fallback-account-input" type="text" placeholder="e.g. (555) 019-2834" style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; margin-bottom: 10px;">
+              <button id="fallback-submit-btn" class="btn btn-outline btn-full" style="font-size: 0.85rem; font-weight: 700;">Look Up Line Manually &rarr;</button>
+            </div>
+
+            <!-- Feedback Alert on Passkey Miss -->
+            <div id="passkey-feedback" style="display: none; max-width: 440px; margin: 16px auto 0 auto; background: #fff9e6; border: 1px solid #ffd54f; border-radius: 8px; padding: 12px; font-size: 0.85rem; color: #5d4037; text-align: left;"></div>
+          </div>
+        </div>
+
+        <!-- Post-Auth / Live Line Diagnostics Dashboard (Revealed after Immediate UI Auth) -->
+        <div id="post-auth-view" style="display: none;">
+          <!-- Subscriber Snapshot Banner -->
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="font-size: 0.78rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.05em;">Verified Fiber Subscriber</div>
+              <h4 id="sub-name" style="margin: 2px 0; font-size: 1.15rem; color: #14532d; font-weight: 800;">Elisa Beckett</h4>
+              <span id="sub-details" style="font-size: 0.84rem; color: #166534;">Account: #FIBER-8849-NY • 742 Evergreen Terrace, Brooklyn, NY</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.78rem; color: #166534; font-weight: 600;">Plan: Symmetric 2 Gbps Fiber</span>
+              <div style="font-size: 0.74rem; color: #15803d;">Modem: Wi-Fi 7 Smart Optical Hub (MAC: 4A:89:C2:11:09)</div>
+            </div>
+          </div>
+
+          <!-- Line Telemetry Cards -->
+          <h4 style="margin: 0 0 12px 0; font-size: 1.05rem; font-weight: 800;">Live Line Telemetry &amp; Outage Analysis</h4>
+          <div class="diagnostic-grid">
+            <div class="diag-metric" style="border-left: 4px solid #ef4444;">
+              <div class="diag-label">Optical Laser Signal</div>
+              <div class="diag-value" style="color: #dc2626;">🔴 Loss of Signal</div>
+              <span style="font-size: 0.76rem; color: var(--text-muted);">-34.2 dBm (Threshold: -26 dBm)</span>
+            </div>
+            <div class="diag-metric" style="border-left: 4px solid #f59e0b;">
+              <div class="diag-label">Neighborhood Status</div>
+              <div class="diag-value" style="color: #d97706;">⚠️ Node Outage</div>
+              <span style="font-size: 0.76rem; color: var(--text-muted);">Sector 4B Fiber Maintenance</span>
+            </div>
+            <div class="diag-metric" style="border-left: 4px solid #3b82f6;">
+              <div class="diag-label">Estimated Restoration</div>
+              <div class="diag-value" style="color: #2563eb;">Today, 3:15 PM</div>
+              <span style="font-size: 0.76rem; color: var(--text-muted);">45 minutes remaining</span>
+            </div>
+            <div class="diag-metric" style="border-left: 4px solid #10b981;">
+              <div class="diag-label">Outage Credit Applied</div>
+              <div class="diag-value" style="color: #059669;">-$15.00 Auto-Credit</div>
+              <span style="font-size: 0.76rem; color: var(--text-muted);">Credited to next billing cycle</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons for Verified Subscriber -->
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;">
+            <button id="reboot-modem-btn" class="btn btn-outline" style="font-weight: 700; font-size: 0.88rem;">
+              🔄 Send Remote Optical Reset
+            </button>
+            <button id="hotspot-backup-btn" class="btn btn-primary" style="font-weight: 700; font-size: 0.88rem;">
+              📱 Activate Free 50GB 5G Backup Hotspot
+            </button>
+            <button id="open-chat-btn" class="btn btn-outline" style="font-weight: 700; font-size: 0.88rem;">
+              💬 Live Chat with Tier-2 Engineer
+            </button>
+          </div>
+
+          <!-- Pre-Populated Live Support Chat -->
+          <div id="support-chat-box" class="chat-container" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div style="font-weight: 800; font-size: 0.95rem;">💬 Live Tier-2 Fiber Support</div>
+              <span style="font-size: 0.76rem; color: #16a34a; font-weight: 700;">🟢 Connected to Engineer: Marcus Vance</span>
+            </div>
+            <div id="chat-messages">
+              <div class="chat-bubble system">
+                🔒 Session Authenticated via WebAuthn Passkey (Hardware Verified) • Telemetry Attached: [Loss of Signal / Sector 4B]
+              </div>
+              <div class="chat-bubble agent">
+                <strong>Marcus (Tier-2 Network Ops):</strong><br>
+                Hi Elisa! I already have your terminal MAC (4A:89:C2:11:09) and Brooklyn line diagnostics pulled up. Our field technicians are currently wrapping up the optical cable splice on your street. Your service will automatically come back online around 3:15 PM!
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <input type="text" placeholder="Type a message to Marcus..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.9rem;">
+              <button class="btn btn-primary" style="font-size: 0.85rem;">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Logs Console -->
+      <div style="margin-top: 32px;">
+        <div class="imm-console-wrapper">
+          <div class="imm-console-header">
+            <span class="imm-console-title">🖥️ ISP Support Diagnostics Console</span>
+            <button id="clear-logs-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 3px 8px;">Clear</button>
+          </div>
+          <div id="support-console" class="imm-console">
+            <div class="imm-log-entry info">[System] Customer portal initialized in unauthenticated state. Awaiting 1-tap diagnostic request...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initImmediateShowcase, runImmediateAuth, toast } from './static/js/app.js';
+
+    initImmediateShowcase(window.location.pathname);
+
+    const consoleEl = document.getElementById('support-console');
+    function log(msg, type = 'info') {
+      if (!consoleEl) return;
+      const entry = document.createElement('div');
+      entry.className = `imm-log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      consoleEl.appendChild(entry);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    document.getElementById('clear-logs-btn')?.addEventListener('click', () => {
+      if (consoleEl) consoleEl.innerHTML = '';
+    });
+
+    const preAuthView = document.getElementById('pre-auth-view');
+    const postAuthView = document.getElementById('post-auth-view');
+    const authPill = document.getElementById('auth-status-pill');
+    const feedbackEl = document.getElementById('passkey-feedback');
+
+    // 1. Run 1-Tap Immediate UI Outage Diagnostics
+    document.getElementById('imm-diagnose-btn')?.addEventListener('click', async () => {
+      log('User clicked "1-Tap Identify & Diagnose Line". Invoking runImmediateAuth with uiMode: "immediate"...', 'info');
+      if (feedbackEl) feedbackEl.style.display = 'none';
+
+      await runImmediateAuth({
+        useImmediate: true,
+        reqPasskeys: true,
+        onSuccess: (user) => {
+          log(`🎉 Passkey Assertion Verified! Identified subscriber: ${user.username} (${user.email})`, 'success');
+          log('Querying Optical Line Terminal (OLT) backend for subscriber #FIBER-8849-NY...', 'info');
+          log('Telemetry received: Loss of Optical Signal (-34.2 dBm). Sector 4B maintenance active.', 'warning');
+
+          toast(`✨ Identified subscriber: ${user.username}! Telemetry loaded.`);
+
+          // Transition UI to authenticated dashboard
+          if (preAuthView) preAuthView.style.display = 'none';
+          if (postAuthView) postAuthView.style.display = 'block';
+
+          if (authPill) {
+            authPill.className = 'status-badge verified';
+            authPill.innerHTML = `<span>🟢 Verified Subscriber: ${user.username}</span>`;
+          }
+        },
+        onFallback: (reason, err) => {
+          log(`Immediate UI mode fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
+          toast('No passkey found on this device. Please look up account manually.');
+
+          if (feedbackEl) {
+            feedbackEl.style.display = 'block';
+            feedbackEl.innerHTML = `
+              <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey on this Device</div>
+              <div>If you have not registered a passkey on this phone, create one in 5 seconds for instant 1-tap support:</div>
+              <div style="margin-top: 8px;">
+                <a href="register.html" class="btn btn-primary btn-full" style="font-size: 0.82rem; padding: 6px 10px; text-align: center;">
+                  ✨ Create Passkey (register.html) &rarr;
+                </a>
+              </div>
+            `;
+          }
+        }
+      });
+    });
+
+    // Toggle Manual Fallback
+    const fallbackToggleBtn = document.getElementById('support-fallback-toggle-btn');
+    const fallbackBox = document.getElementById('fallback-search-box');
+    fallbackToggleBtn?.addEventListener('click', () => {
+      if (fallbackBox) {
+        fallbackBox.style.display = fallbackBox.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+
+    document.getElementById('fallback-submit-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('fallback-account-input')?.value || '(555) 019-2834';
+      toast(`✅ Manual account lookup verified for ${input}`);
+      log(`Manual lookup successful for ${input}. Loading line diagnostics...`, 'success');
+      if (preAuthView) preAuthView.style.display = 'none';
+      if (postAuthView) postAuthView.style.display = 'block';
+      if (authPill) {
+        authPill.className = 'status-badge verified';
+        authPill.innerHTML = `<span>🟢 Subscriber: Elisa Beckett (${input})</span>`;
+      }
+    });
+
+    // Remote Reboot Action
+    document.getElementById('reboot-modem-btn')?.addEventListener('click', () => {
+      toast('🔄 Sending remote optical laser reset packet...');
+      log('Dispatched TR-069 reboot command to gateway MAC: 4A:89:C2:11:09...', 'info');
+      setTimeout(() => {
+        toast('⚠️ Gateway acknowledges reboot command, but optical signal is still offline due to street cable splice.');
+        log('Gateway status: ONT restart complete. Awaiting physical fiber signal restoration.', 'warning');
+      }, 1500);
+    });
+
+    // 5G Backup Hotspot Activation
+    document.getElementById('hotspot-backup-btn')?.addEventListener('click', () => {
+      toast('🎉 50GB Free 5G Backup Hotspot successfully activated on your mobile account!');
+      log('Granted 50GB Unlimited 5G Backup data pass to line +1 (555) 019-2834 with $0 charge.', 'success');
+    });
+
+    // Toggle Chat
+    document.getElementById('open-chat-btn')?.addEventListener('click', () => {
+      const chatBox = document.getElementById('support-chat-box');
+      if (chatBox) {
+        chatBox.style.display = chatBox.style.display === 'none' ? 'block' : 'none';
+        log('Opened pre-authenticated live chat. Initialized with subscriber context and telemetry.', 'info');
+      }
+    });
+  </script>
+</body>
+</html>
