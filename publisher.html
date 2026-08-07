@@ -175,7 +175,7 @@
 
       <!-- Context Alert -->
       <div style="background: var(--brand-accent-light); border-left: 4px solid var(--brand-accent); padding: 14px 18px; border-radius: 4px; margin-bottom: 28px; color: #0033aa; font-size: 0.92rem; line-height: 1.5;">
-        <strong>How it works:</strong> Scroll down the article below. When you reach the paywall barrier, an <code>IntersectionObserver</code> triggers a floating <strong>1-Tap Passkey Unlock</strong> bar. Tapping it invokes Immediate UI, dissolves the CSS blur, and lets you continue reading uninterrupted without page reloads or losing your place!
+        <strong>How it works:</strong> Scroll down the article below. When you reach the paywall barrier, an <code>IntersectionObserver</code> triggers a floating <strong>Continue Reading with Account</strong> bar. Clicking it invokes Immediate UI under the hood, dissolves the CSS blur, and lets you continue reading uninterrupted without page reloads or losing your place!
       </div>
 
       <!-- Main Article Box -->
@@ -210,20 +210,20 @@
           <div id="gated-section" class="gated-content-wrapper locked">
             <!-- Overlay Paywall Card -->
             <div id="paywall-card" class="paywall-overlay-card">
-              <div style="font-size: 2.2rem; margin-bottom: 8px;">✨</div>
+              <div style="font-size: 2.2rem; margin-bottom: 8px;">📖</div>
               <h3 style="margin: 0 0 8px 0; font-size: 1.35rem; font-weight: 800;">Subscriber Exclusive Article</h3>
               <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 460px; margin: 0 0 20px 0; line-height: 1.5;">
-                You've reached the free preview limit. Unlock the remaining 4 minutes of technical analysis instantly with your passkey:
+                You've reached the free preview limit. Sign in to your existing account to unlock the remaining 4 minutes of technical analysis:
               </p>
 
               <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px;">
                 <button id="imm-article-unlock-btn" class="btn btn-primary btn-full" style="font-weight: 700; font-size: 1rem; padding: 14px 20px;">
-                  ⚡ 1-Tap Unlock with Passkey
+                  📖 Continue Reading with Your Account
                 </button>
                 <div style="font-size: 0.8rem; color: var(--text-muted); margin: 6px 0;">&mdash; OR &mdash;</div>
                 <div id="fallback-subscribe-box" style="width: 100%;">
                   <button id="guest-sub-toggle-btn" class="btn btn-outline btn-full" style="font-size: 0.85rem;">
-                    ✉️ Subscribe with Email ($1 / month)
+                    ✉️ Subscribe as New Member ($1 / month)
                   </button>
                   <div id="guest-sub-form" style="display: none; margin-top: 12px; text-align: left; background: var(--surface-subtle); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
                     <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;">Enter your email</label>
@@ -250,7 +250,7 @@
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 24px 0; font-family: monospace; font-size: 0.9rem; color: #1e293b;">
                 <strong>💡 Publisher Performance Metric:</strong><br>
                 Traditional Paywall Conversion: <strong>2.8%</strong><br>
-                Immediate UI 1-Tap Paywall Conversion: <strong>21.4%</strong> (7.6x improvement)
+                Immediate UI In-Place Unlock Conversion: <strong>21.4%</strong> (7.6x improvement)
               </div>
 
               <p>
@@ -272,7 +272,7 @@
           </div>
         </div>
         <button id="floating-unlock-btn" class="btn btn-primary" style="background: #ffffff; color: #111111; font-weight: 700; font-size: 0.85rem; padding: 8px 16px; border-radius: var(--radius-pill);">
-          ⚡ 1-Tap Unlock
+          📖 Continue Reading with Account
         </button>
       </div>
 
@@ -338,7 +338,7 @@
     // 2. Perform Immediate UI Unlock
     async function triggerArticleUnlock() {
       if (isUnlocked) return;
-      log('User initiated 1-Tap Unlock. Invoking runImmediateAuth with uiMode: "immediate"...', 'info');
+      log('User clicked "Continue Reading with Account". Invoking runImmediateAuth with uiMode: "immediate"...', 'info');
 
       if (feedbackEl) feedbackEl.style.display = 'none';
 
