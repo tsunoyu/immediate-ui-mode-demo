@@ -177,7 +177,17 @@ function renderDemoPagination(cleanPath) {
  * Creates a real discoverable resident passkey using navigator.credentials.create
  * Supports static GitHub Pages & dynamic backends
  */
-export async function createTestPasskey({ username = 'Elisa Beckett', email = 'elisa.beckett@demogmail.com' } = {}) {
+export async function createTestPasskey(param1 = {}, param2) {
+  let username = 'Elisa Beckett';
+  let email = 'elisa.beckett@demogmail.com';
+  if (typeof param1 === 'string') {
+    username = param1;
+    if (param2) email = param2;
+  } else if (typeof param1 === 'object' && param1 !== null) {
+    if (param1.username) username = param1.username;
+    if (param1.email) email = param1.email;
+  }
+
   try {
     if (!window.PublicKeyCredential || !navigator.credentials?.create) {
       throw new Error('WebAuthn API is not supported in this browser.');

@@ -420,15 +420,32 @@
         onSignIn: handleAuthSuccess,
         onSuccess: handleAuthSuccess,
         onFallback: (reason, err) => {
-          log(`Immediate UI fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
-          toast('No passkey found on this device. Please create a passkey first.');
+          const isGestureReq = err?.message?.toLowerCase().includes('user gesture') || !navigator.userActivation?.isActive;
+          log(`Immediate UI fallback: ${reason} (${err?.message || 'Biometric interaction needed'})`, 'warning');
 
           if (feedbackEl) {
             feedbackEl.style.display = 'block';
-            feedbackEl.innerHTML = `
-              <div style="font-weight: 700; margin-bottom: 4px;">⚠️ No Passkey on this Device</div>
-              <div>Click the blue button at the top to create a passkey for this site in 2 seconds.</div>
-            `;
+            if (isGestureReq) {
+              feedbackEl.style.background = '#eff6ff';
+              feedbackEl.style.borderColor = '#93c5fd';
+              feedbackEl.innerHTML = `
+                <div style="font-weight: 700; color: #1e40af; margin-bottom: 6px; font-size: 0.95rem;">🔒 Human Biometric Touch Required</div>
+                <div style="color: #1e3a8a; margin-bottom: 10px; line-height: 1.45;">
+                  Your AI Agent (Gemini in Chrome) has navigated to checkout. For hardware security, please touch the button below to authorize payment with your fingerprint:
+                </div>
+                <button id="direct-human-auth-btn" class="btn btn-primary btn-full" style="background: #1a73e8; border-color: #1a73e8; font-weight: 700; font-size: 0.95rem; padding: 12px;">
+                  👆 Tap Here to Verify with Passkey ($389.00)
+                </button>
+              `;
+              document.getElementById('direct-human-auth-btn')?.addEventListener('click', handlePasskeySignIn);
+            } else {
+              feedbackEl.style.background = '#fff9e6';
+              feedbackEl.style.borderColor = '#ffd54f';
+              feedbackEl.innerHTML = `
+                <div style="font-weight: 700; color: #5d4037; margin-bottom: 4px;">⚠️ Passkey Not Found or Cancelled</div>
+                <div style="color: #5d4037;">Please click the blue <strong>Create Passkey</strong> button at the top, then try again.</div>
+              `;
+            }
           }
         }
       });
