@@ -80,7 +80,7 @@
     /* Paywall Gated Section */
     .gated-content-wrapper {
       position: relative;
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.5s ease;
     }
 
     .gated-content-wrapper.locked .gated-paragraphs {
@@ -88,14 +88,15 @@
       user-select: none;
       pointer-events: none;
       opacity: 0.45;
-      transition: filter 0.6s ease, opacity 0.6s ease;
+      transition: filter 0.5s ease, opacity 0.5s ease;
     }
 
     .gated-content-wrapper.unlocked .gated-paragraphs {
-      filter: blur(0px);
-      user-select: auto;
-      pointer-events: auto;
-      opacity: 1;
+      filter: none !important;
+      -webkit-filter: none !important;
+      user-select: auto !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
     }
 
     /* Gradient overlay and paywall barrier card */
@@ -115,14 +116,14 @@
       border: 1px solid var(--border-color);
       text-align: center;
       z-index: 10;
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .gated-content-wrapper.unlocked .paywall-overlay-card {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(20px);
-      display: none;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      display: none !important;
+      visibility: hidden !important;
     }
 
     /* Floating Reader Bar (Appears on Scroll) */
@@ -185,9 +186,9 @@
           <span class="article-tag">Deep Dive • Digital Identity</span>
           <h1 class="article-title">Why Immediate UI Mode is the Missing Link for the Frictionless Web</h1>
           <div class="article-meta">
-            <div class="author-avatar">YT</div>
+            <div class="author-avatar">EB</div>
             <div>
-              <div style="font-weight: 700; color: var(--text-main);">Yu Tsuno &amp; Chrome Identity Team</div>
+              <div style="font-weight: 700; color: var(--text-main);">Elisa Beckett &amp; Chrome Identity Team</div>
               <div style="font-size: 0.8rem;">Published August 2026 • 6 min read • 🔒 Premium Article</div>
             </div>
           </div>
@@ -342,19 +343,47 @@
 
       if (feedbackEl) feedbackEl.style.display = 'none';
 
-      const handleAuthSuccess = (user) => {
+      function performUnblur(user) {
         isUnlocked = true;
-        log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${user.username} (${user.email})`, 'success');
-        toast(`✨ Welcome back, ${user.username}! Full article unlocked.`);
 
-        // Smoothly unblur the article in place
+        // 1. Update gated section classes
         gatedSection.classList.remove('locked');
         gatedSection.classList.add('unlocked');
-        floatingBar?.classList.add('hidden-unlocked');
 
-        setTimeout(() => {
-          if (paywallCard) paywallCard.style.display = 'none';
-        }, 400);
+        // 2. Clear any blur filters directly on paragraphs
+        const paragraphs = document.querySelector('.gated-paragraphs');
+        if (paragraphs) {
+          paragraphs.style.filter = 'none';
+          paragraphs.style.webkitFilter = 'none';
+          paragraphs.style.opacity = '1';
+          paragraphs.style.pointerEvents = 'auto';
+          paragraphs.style.userSelect = 'auto';
+        }
+
+        // 3. Remove paywall overlay card and floating bar
+        if (paywallCard) {
+          paywallCard.style.display = 'none';
+          paywallCard.remove();
+        }
+        if (floatingBar) {
+          floatingBar.style.display = 'none';
+          floatingBar.classList.add('hidden-unlocked');
+        }
+
+        // 4. Inject Verified Subscriber Badge above unlocked content
+        const sentinelEl = document.getElementById('paywall-sentinel');
+        if (sentinelEl) {
+          const badge = document.createElement('div');
+          badge.style.cssText = 'background: #e6f4ea; border: 1px solid #84e1bc; color: #065f46; padding: 12px 18px; border-radius: 8px; font-size: 0.92rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;';
+          badge.innerHTML = `<span>✨ Verified Subscriber: <strong>${user.username || 'Elisa Beckett'}</strong> &mdash; Enjoy full article access!</span>`;
+          sentinelEl.parentNode.insertBefore(badge, sentinelEl);
+        }
+      }
+
+      const handleAuthSuccess = (user) => {
+        log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${user.username} (${user.email})`, 'success');
+        toast(`✨ Welcome back, ${user.username}! Full article unlocked.`);
+        performUnblur(user);
       };
 
       await runImmediateAuth({
@@ -398,12 +427,21 @@
     document.getElementById('sub-submit-btn')?.addEventListener('click', () => {
       const email = document.getElementById('sub-email')?.value || 'reader@example.com';
       toast(`✅ Subscription active for ${email}! Unlocking article.`);
-      isUnlocked = true;
+      log(`Guest email subscribed: ${email}. Article unlocked in-place.`, 'success');
+      
+      // Perform unblur for guest email subscriber as well
       gatedSection.classList.remove('locked');
       gatedSection.classList.add('unlocked');
-      floatingBar?.classList.add('hidden-unlocked');
+      const paragraphs = document.querySelector('.gated-paragraphs');
+      if (paragraphs) {
+        paragraphs.style.filter = 'none';
+        paragraphs.style.webkitFilter = 'none';
+        paragraphs.style.opacity = '1';
+        paragraphs.style.pointerEvents = 'auto';
+        paragraphs.style.userSelect = 'auto';
+      }
       if (paywallCard) paywallCard.style.display = 'none';
-      log(`Guest email subscribed: ${email}. Article unlocked in-place.`, 'success');
+      if (floatingBar) floatingBar.style.display = 'none';
     });
   </script>
 </body>
