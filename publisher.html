@@ -342,23 +342,26 @@
 
       if (feedbackEl) feedbackEl.style.display = 'none';
 
+      const handleAuthSuccess = (user) => {
+        isUnlocked = true;
+        log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${user.username} (${user.email})`, 'success');
+        toast(`✨ Welcome back, ${user.username}! Full article unlocked.`);
+
+        // Smoothly unblur the article in place
+        gatedSection.classList.remove('locked');
+        gatedSection.classList.add('unlocked');
+        floatingBar?.classList.add('hidden-unlocked');
+
+        setTimeout(() => {
+          if (paywallCard) paywallCard.style.display = 'none';
+        }, 400);
+      };
+
       await runImmediateAuth({
         useImmediate: true,
         reqPasskeys: true,
-        onSuccess: (user) => {
-          isUnlocked = true;
-          log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${user.username} (${user.email})`, 'success');
-          toast(`✨ Welcome back, ${user.username}! Full article unlocked.`);
-
-          // Smoothly unblur the article in place
-          gatedSection.classList.remove('locked');
-          gatedSection.classList.add('unlocked');
-          floatingBar?.classList.add('hidden-unlocked');
-
-          setTimeout(() => {
-            if (paywallCard) paywallCard.style.display = 'none';
-          }, 400);
-        },
+        onSignIn: handleAuthSuccess,
+        onSuccess: handleAuthSuccess,
         onFallback: (reason, err) => {
           log(`Immediate UI mode fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
           toast('No passkey found on this device. Please register or subscribe.');

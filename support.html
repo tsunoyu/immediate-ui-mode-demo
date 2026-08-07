@@ -329,33 +329,36 @@
       log(`User clicked "${actionName}". Invoking runImmediateAuth with uiMode: "immediate"...`, 'info');
       if (feedbackEl) feedbackEl.style.display = 'none';
 
+      const handleAuthSuccess = (user) => {
+        log(`🎉 Passkey Assertion Verified! Identified subscriber: ${user.username} (${user.email})`, 'success');
+        log('Querying Optical Line Terminal (OLT) backend for subscriber #FIBER-8849-NY...', 'info');
+        log('Telemetry received: Loss of Optical Signal (-34.2 dBm). Sector 4B maintenance active.', 'warning');
+
+        toast(`✨ Identified subscriber: ${user.username}! Loading ${actionName}...`);
+
+        // Transition UI to authenticated dashboard
+        if (preAuthView) preAuthView.style.display = 'none';
+        if (postAuthView) postAuthView.style.display = 'block';
+
+        if (authPill) {
+          authPill.className = 'status-badge verified';
+          authPill.innerHTML = `<span>🟢 Verified Subscriber: ${user.username}</span>`;
+        }
+
+        if (autoOpenChat) {
+          const chatBox = document.getElementById('support-chat-box');
+          if (chatBox) {
+            chatBox.style.display = 'block';
+            log('Initialized pre-authenticated live chat with engineer.', 'info');
+          }
+        }
+      };
+
       await runImmediateAuth({
         useImmediate: true,
         reqPasskeys: true,
-        onSuccess: (user) => {
-          log(`🎉 Passkey Assertion Verified! Identified subscriber: ${user.username} (${user.email})`, 'success');
-          log('Querying Optical Line Terminal (OLT) backend for subscriber #FIBER-8849-NY...', 'info');
-          log('Telemetry received: Loss of Optical Signal (-34.2 dBm). Sector 4B maintenance active.', 'warning');
-
-          toast(`✨ Identified subscriber: ${user.username}! Loading ${actionName}...`);
-
-          // Transition UI to authenticated dashboard
-          if (preAuthView) preAuthView.style.display = 'none';
-          if (postAuthView) postAuthView.style.display = 'block';
-
-          if (authPill) {
-            authPill.className = 'status-badge verified';
-            authPill.innerHTML = `<span>🟢 Verified Subscriber: ${user.username}</span>`;
-          }
-
-          if (autoOpenChat) {
-            const chatBox = document.getElementById('support-chat-box');
-            if (chatBox) {
-              chatBox.style.display = 'block';
-              log('Initialized pre-authenticated live chat with engineer.', 'info');
-            }
-          }
-        },
+        onSignIn: handleAuthSuccess,
+        onSuccess: handleAuthSuccess,
         onFallback: (reason, err) => {
           log(`Immediate UI mode fallback triggered: ${reason} (${err?.message || 'No local passkeys'})`, 'warning');
           toast('No passkey found on this device. Please look up account manually.');

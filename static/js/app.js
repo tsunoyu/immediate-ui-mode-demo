@@ -382,17 +382,21 @@ export async function runImmediateAuth(options) {
         credentialType: cred.type === 'password' ? 'password' : 'passkey',
         provider: cred.type === 'password' ? 'Password Manager' : 'Google Password Manager',
       };
-      options.onSignIn(immUser);
+
+      const successFn = options.onSignIn || options.onSuccess;
+      if (typeof successFn === 'function') {
+        successFn(immUser);
+      }
       return;
     }
     throw new Error('No credential returned.');
   } catch (error) {
     console.warn('WebAuthn Immediate UI Mode check returned:', error.name, error.message);
-    if (error.name === 'NotAllowedError' || error.name === 'AbortError' || error.message?.includes('NotAllowedError')) {
-      options.onFallback(error);
+    const fallbackFn = options.onFallback || options.onError;
+    if (typeof fallbackFn === 'function') {
+      fallbackFn(error.name || 'Fallback', error);
     } else {
       toast(error.message || 'WebAuthn request failed.');
-      options.onFallback(error);
     }
   }
 }
