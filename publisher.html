@@ -369,20 +369,12 @@
           floatingBar.style.display = 'none';
           floatingBar.classList.add('hidden-unlocked');
         }
-
-        // 4. Inject Verified Subscriber Badge above unlocked content
-        const sentinelEl = document.getElementById('paywall-sentinel');
-        if (sentinelEl) {
-          const badge = document.createElement('div');
-          badge.style.cssText = 'background: #e6f4ea; border: 1px solid #84e1bc; color: #065f46; padding: 12px 18px; border-radius: 8px; font-size: 0.92rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;';
-          badge.innerHTML = `<span>✨ Verified Subscriber: <strong>${user.username || 'Elisa Beckett'}</strong> &mdash; Enjoy full article access!</span>`;
-          sentinelEl.parentNode.insertBefore(badge, sentinelEl);
-        }
       }
 
       const handleAuthSuccess = (user) => {
-        log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${user.username} (${user.email})`, 'success');
-        toast(`✨ Welcome back, ${user.username}! Full article unlocked.`);
+        const displayName = user.username || 'Elisa Beckett';
+        log(`🎉 WebAuthn Assertion Verified! Reader authenticated as: ${displayName} (${user.email || 'elisa.beckett@demogmail.com'})`, 'success');
+        toast(`✨ Verified Subscriber: ${displayName} — Full article unlocked!`, 4500);
         performUnblur(user);
       };
 
